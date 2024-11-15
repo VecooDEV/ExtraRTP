@@ -1,0 +1,33 @@
+plugins {
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+
+forgeVersion = "1.16.5"
+
+minecraft {
+    mappings channel: 'official', version: '1.16.5'
+    copyIdeResources = true
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+repositories {}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.16.5-36.2.42'
+
+    implementation fg.deobf('maven.modrinth:extralib:1.2.3-forge,1.16.5')
+}
+
+shadowJar {
+    configurations = [project.configurations.shadow]
+    setArchiveBaseName("${rootProject.name}")
+    setArchiveClassifier('')
+}
+
+jar.finalizedBy('shadowJar')
+shadowJar.finalizedBy('reobfJar')
+build.finalizedBy('versionedRelease')

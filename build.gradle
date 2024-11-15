@@ -1,0 +1,38 @@
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+
+    group = 'com.vecoo.extrartp'
+    version = '1.0.0'
+
+    ext {
+        forgeVersion = "none"
+    }
+
+    jar {
+        setArchiveBaseName("${rootProject.name}")
+    }
+
+    repositories {
+        mavenCentral()
+        maven { url = "https://api.modrinth.com/maven" }
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+    }
+
+    task versionedRelease(type: Copy) {
+        dependsOn('shadowJar')
+        delete fileTree('../release/') {
+            include '**/*.jar'
+        }
+        group "build"
+        from("./build/libs/${rootProject.name}-${version}.jar")
+        into('../release/')
+        include '*.jar'
+        rename { String filename ->
+            filename.replace("-${version}.jar", "-${project.version}-${forgeVersion}.jar")
+        }
+    }
+}
