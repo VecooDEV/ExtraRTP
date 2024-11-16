@@ -1,0 +1,32 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="All Rights Reserved"
+
+[[mods]]
+modId="extrartp"
+version="1.0.0"
+displayName="ExtraRTP"
+logoFile ="logo.png"
+authors="Vecoo"
+description="A mod that adds a system of random teleportation across dimensions."
+
+[[dependencies.extrartp]]
+modId="forge"
+mandatory=true
+versionRange="[47,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.extrartp]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.extrartp]]
+modId="extralib"
+mandatory=true
+versionRange="[1.2,)"
+ordering="AFTER"
+side="BOTH"
