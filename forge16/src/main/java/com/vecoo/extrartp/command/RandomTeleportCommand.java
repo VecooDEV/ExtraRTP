@@ -25,7 +25,7 @@ public class RandomTeleportCommand {
                     .then(Commands.argument("dimension", StringArgumentType.string())
                             .requires(p -> UtilPermissions.hasPermission(p, "minecraft.command.randomteleport.dimension", ExtraRTP.getInstance().getPermission().getPermissionCommand()))
                             .suggests((s, builder) -> {
-                                for (ServerWorld dimensions : ExtraLib.getInstance().getServer().getAllLevels()) {
+                                for (ServerWorld dimensions : ExtraRTP.getInstance().getServer().getAllLevels()) {
                                     String dimensionName = dimensions.dimension().location().getPath().toLowerCase();
                                     if (dimensionName.startsWith(builder.getRemaining().toLowerCase())) {
                                         builder.suggest(dimensionName);
@@ -49,7 +49,7 @@ public class RandomTeleportCommand {
             return 0;
         }
 
-        ServerWorld world = UtilWorld.getWorldByName(ExtraRTP.getInstance().getConfig().getDefaultWorld());
+        ServerWorld world = UtilWorld.getWorldByName(ExtraRTP.getInstance().getConfig().getDefaultWorld(), ExtraRTP.getInstance().getServer());
 
         if (world == null) {
             player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getNotDimensionFound()
@@ -81,7 +81,7 @@ public class RandomTeleportCommand {
             return 0;
         }
 
-        ServerWorld world = UtilWorld.getWorldByName(dimension);
+        ServerWorld world = UtilWorld.getWorldByName(dimension, ExtraRTP.getInstance().getServer());
 
         if (world == null) {
             player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getNotDimensionFound()
@@ -119,7 +119,7 @@ public class RandomTeleportCommand {
             return 0;
         }
 
-        ServerWorld world = UtilWorld.getWorldByName(dimension);
+        ServerWorld world = UtilWorld.getWorldByName(dimension, ExtraRTP.getInstance().getServer());
 
         if (world == null) {
             source.sendSuccess(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getNotDimensionFound()

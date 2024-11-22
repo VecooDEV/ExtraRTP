@@ -23,7 +23,7 @@ public class RandomTeleportCommand {
                     .then(Commands.argument("dimension", StringArgumentType.string())
                             .requires(p -> p.hasPermission(ExtraRTP.getInstance().getPermission().getPermissionCommand().get("minecraft.command.randomteleport.dimension")))
                             .suggests((s, builder) -> {
-                                for (ServerLevel dimensions : ExtraLib.getInstance().getServer().getAllLevels()) {
+                                for (ServerLevel dimensions : ExtraRTP.getInstance().getServer().getAllLevels()) {
                                     String dimensionName = dimensions.dimension().location().getPath().toLowerCase();
                                     if (dimensionName.startsWith(builder.getRemaining().toLowerCase())) {
                                         builder.suggest(dimensionName);
@@ -42,7 +42,7 @@ public class RandomTeleportCommand {
     }
 
     private static int execute(ServerPlayer player) {
-        ServerLevel level = (ServerLevel) UtilWorld.getWorldByName(ExtraRTP.getInstance().getConfig().getDefaultWorld());
+        ServerLevel level = (ServerLevel) UtilWorld.getWorldByName(ExtraRTP.getInstance().getConfig().getDefaultWorld(), ExtraRTP.getInstance().getServer());
 
         if (level == null) {
             player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getNotDimensionFound()
@@ -69,7 +69,7 @@ public class RandomTeleportCommand {
     }
 
     private static int executeDimension(ServerPlayer player, String dimension) {
-        ServerLevel level = (ServerLevel) UtilWorld.getWorldByName(dimension);
+        ServerLevel level = (ServerLevel) UtilWorld.getWorldByName(dimension, ExtraRTP.getInstance().getServer());
 
         if (level == null) {
             player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getNotDimensionFound()
@@ -102,7 +102,7 @@ public class RandomTeleportCommand {
     }
 
     private static int executeDimensionPlayer(CommandSourceStack source, String dimension, ServerPlayer player) {
-        ServerLevel level = (ServerLevel) UtilWorld.getWorldByName(dimension);
+        ServerLevel level = (ServerLevel) UtilWorld.getWorldByName(dimension, ExtraRTP.getInstance().getServer());
 
         if (level == null) {
             source.sendSuccess(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getNotDimensionFound()

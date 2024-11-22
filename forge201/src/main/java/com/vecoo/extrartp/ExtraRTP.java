@@ -4,8 +4,10 @@ import com.vecoo.extrartp.command.RandomTeleportCommand;
 import com.vecoo.extrartp.config.LocaleConfig;
 import com.vecoo.extrartp.config.PermissionConfig;
 import com.vecoo.extrartp.config.ServerConfig;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.apache.logging.log4j.LogManager;
@@ -22,6 +24,8 @@ public class ExtraRTP {
     private LocaleConfig locale;
     private PermissionConfig permission;
 
+    private MinecraftServer server;
+
     public ExtraRTP() {
         instance = this;
 
@@ -33,6 +37,11 @@ public class ExtraRTP {
     @SubscribeEvent
     public void onRegisterCommands(RegisterCommandsEvent event) {
         RandomTeleportCommand.register(event.getDispatcher());
+    }
+
+    @SubscribeEvent
+    public void onServerStarting(ServerStartingEvent event) {
+        this.server = event.getServer();
     }
 
     public void loadConfig() {
@@ -66,5 +75,9 @@ public class ExtraRTP {
 
     public PermissionConfig getPermission() {
         return instance.permission;
+    }
+
+    public MinecraftServer getServer() {
+        return instance.server;
     }
 }
