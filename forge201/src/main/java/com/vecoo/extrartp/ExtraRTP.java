@@ -2,14 +2,16 @@ package com.vecoo.extrartp;
 
 import com.vecoo.extrartp.command.RandomTeleportCommand;
 import com.vecoo.extrartp.config.LocaleConfig;
-import com.vecoo.extrartp.config.PermissionConfig;
 import com.vecoo.extrartp.config.ServerConfig;
+import com.vecoo.extrartp.listener.RTPListener;
+import com.vecoo.extrartp.util.PermissionNodes;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.server.permission.events.PermissionGatherEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,7 +24,6 @@ public class ExtraRTP {
 
     private ServerConfig config;
     private LocaleConfig locale;
-    private PermissionConfig permission;
 
     private MinecraftServer server;
 
@@ -32,6 +33,16 @@ public class ExtraRTP {
         this.loadConfig();
 
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new RTPListener());
+    }
+
+    @SubscribeEvent
+    public void onPermissionGather(PermissionGatherEvent.Nodes event) {
+        event.addNodes(PermissionNodes.RANDOMTELEPORT_COMMAND);
+        event.addNodes(PermissionNodes.RANDOMTELEPORT_RELOAD_COMMAND);
+        event.addNodes(PermissionNodes.RANDOMTELEPORT_COOLDOWN_COMMAND);
+        event.addNodes(PermissionNodes.RANDOMTELEPORT_DIMENSION_COMMAND);
+        event.addNodes(PermissionNodes.RANDOMTELEPORT_DIMENSION_PLAYER_COMMAND);
     }
 
     @SubscribeEvent
@@ -50,8 +61,6 @@ public class ExtraRTP {
             this.config.init();
             this.locale = new LocaleConfig();
             this.locale.init();
-            this.permission = new PermissionConfig();
-            this.permission.init();
         } catch (Exception e) {
             LOGGER.error("[ExtraRTP] Error load config.");
         }
@@ -71,10 +80,6 @@ public class ExtraRTP {
 
     public LocaleConfig getLocale() {
         return instance.locale;
-    }
-
-    public PermissionConfig getPermission() {
-        return instance.permission;
     }
 
     public MinecraftServer getServer() {

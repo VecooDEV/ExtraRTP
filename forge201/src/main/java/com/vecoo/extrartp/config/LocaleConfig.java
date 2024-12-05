@@ -6,15 +6,14 @@ import com.vecoo.extrartp.ExtraRTP;
 import java.util.concurrent.CompletableFuture;
 
 public class LocaleConfig {
-    private String configReload = "&e(!) Configs reloaded!";
+    private String configReload = "&e(!) Configs reloaded! If you have changed the main command, please restart the server.";
     private String successfulTeleport = "&e(!) You have been successfully teleported dimension %dimension% to coordinates: X: %x%, Y: %y%, Z: %z%.";
     private String successfulTeleportPlayer = "&e(!) You have been successfully teleported player %player% dimension %dimension% to coordinates: X: %x%, Y: %y%, Z: %z%.";
     private String cooldownTeleport = "&e(!) Random teleportation on cooldown, %cooldown% seconds remaining.";
 
     private String dimensionBlacklist = "&c(!) The dimension %dimension% is blacklisted.";
     private String notDimensionFound = "&c(!) Dimension %dimension% not found.";
-    private String failedTeleport = "&c(!) Teleportation failed, try again!";
-    private String notPermission = "&c(!) You do not have sufficient permissions to use the command.";
+    private String failedTeleport = "&c(!) Random teleportation failed, try again /rtp!";
 
     public String getSuccessfulTeleport() {
         return this.successfulTeleport;
@@ -34,10 +33,6 @@ public class LocaleConfig {
 
     public String getDimensionBlacklist() {
         return this.dimensionBlacklist;
-    }
-
-    public String getNotPermission() {
-        return this.notPermission;
     }
 
     public String getFailedTeleport() {
@@ -63,7 +58,6 @@ public class LocaleConfig {
                 this.notDimensionFound = config.getNotDimensionFound();
                 this.failedTeleport = config.getFailedTeleport();
                 this.dimensionBlacklist = config.getDimensionBlacklist();
-                this.notPermission = config.getNotPermission();
                 this.successfulTeleportPlayer = config.getSuccessfulTeleportPlayer();
             });
             if (!future.join()) {

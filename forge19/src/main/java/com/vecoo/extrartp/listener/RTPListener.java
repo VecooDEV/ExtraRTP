@@ -5,9 +5,8 @@ import com.vecoo.extralib.storage.LibFactory;
 import com.vecoo.extralib.world.UtilWorld;
 import com.vecoo.extrartp.ExtraRTP;
 import com.vecoo.extrartp.util.Utils;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.Util;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -15,27 +14,27 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class RTPListener {
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
+        ServerPlayer player = (ServerPlayer) event.getEntity();
 
         if (!UsernameCache.containsUUID(player.getUUID()) && ExtraRTP.getInstance().getConfig().isFirstJoinRTP()) {
-            ServerWorld world = UtilWorld.getWorldByName(ExtraRTP.getInstance().getConfig().getDefaultWorld(), ExtraRTP.getInstance().getServer());
+            ServerLevel level = (ServerLevel) UtilWorld.getWorldByName(ExtraRTP.getInstance().getConfig().getDefaultWorld(), ExtraRTP.getInstance().getServer());
 
-            if (world == null) {
-                player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getNotDimensionFound()
-                        .replace("%dimension%", ExtraRTP.getInstance().getConfig().getDefaultWorld())), Util.NIL_UUID);
+            if (level == null) {
+                player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getNotDimensionFound()
+                        .replace("%dimension%", ExtraRTP.getInstance().getConfig().getDefaultWorld())));
                 return;
             }
 
-            if (!Utils.randomTeleport(world, player)) {
-                player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getFailedTeleport()), Util.NIL_UUID);
+            if (!Utils.randomTeleport(level, player)) {
+                player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getFailedTeleport()));
                 return;
             }
 
-            player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getSuccessfulTeleport()
+            player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getSuccessfulTeleport()
                     .replace("%dimension%", ExtraRTP.getInstance().getConfig().getDefaultWorld())
                     .replace("%x%", String.valueOf((int) player.getX()))
                     .replace("%y%", String.valueOf((int) player.getY()))
-                    .replace("%z%", String.valueOf((int) player.getZ()))), Util.NIL_UUID);
+                    .replace("%z%", String.valueOf((int) player.getZ()))));
             LibFactory.addCommandCooldown(player.getUUID(), ExtraRTP.getInstance().getConfig().getRtpCommand(), System.currentTimeMillis());
         }
     }

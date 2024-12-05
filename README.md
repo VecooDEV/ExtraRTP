@@ -5,6 +5,7 @@ A mod that adds a system of random teleportation across dimensions.
 * Unloaded teleportation system.
 * Teleportation across all dimensions.
 * Fine-tuning the entire teleportation process.
+* Possibility to teleport on the first visit.
 
 ## Commands & Permissions
 You can read more on the [wiki](https://github.com/VecooDEV/ExtraRTP/wiki/Commands-&-Permissions) page.

@@ -2,11 +2,12 @@ package com.vecoo.extrartp.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import com.vecoo.extralib.ExtraLib;
 import com.vecoo.extralib.chat.UtilChat;
-import com.vecoo.extralib.storage.player.LibPlayerFactory;
+import com.vecoo.extralib.permission.UtilPermission;
+import com.vecoo.extralib.storage.LibFactory;
 import com.vecoo.extralib.world.UtilWorld;
 import com.vecoo.extrartp.ExtraRTP;
+import com.vecoo.extrartp.util.PermissionNodes;
 import com.vecoo.extrartp.util.Utils;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -16,29 +17,27 @@ import net.minecraft.server.level.ServerPlayer;
 
 public class RandomTeleportCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        for (String command : ExtraRTP.getInstance().getConfig().getRtpCommands()) {
-            dispatcher.register(Commands.literal(command)
-                    .requires(p -> p.hasPermission(ExtraRTP.getInstance().getPermission().getPermissionCommand().get("minecraft.command.randomteleport")))
-                    .executes(p -> execute(p.getSource().getPlayerOrException()))
-                    .then(Commands.argument("dimension", StringArgumentType.string())
-                            .requires(p -> p.hasPermission(ExtraRTP.getInstance().getPermission().getPermissionCommand().get("minecraft.command.randomteleport.dimension")))
-                            .suggests((s, builder) -> {
-                                for (ServerLevel dimensions : ExtraRTP.getInstance().getServer().getAllLevels()) {
-                                    String dimensionName = dimensions.dimension().location().getPath().toLowerCase();
-                                    if (dimensionName.startsWith(builder.getRemaining().toLowerCase())) {
-                                        builder.suggest(dimensionName);
-                                    }
+        dispatcher.register(Commands.literal(ExtraRTP.getInstance().getConfig().getRtpCommand())
+                .requires(s -> UtilPermission.hasPermission(s, PermissionNodes.RANDOMTELEPORT_COMMAND))
+                .executes(p -> execute(p.getSource().getPlayerOrException()))
+                .then(Commands.argument("dimension", StringArgumentType.string())
+                        .requires(s -> UtilPermission.hasPermission(s, PermissionNodes.RANDOMTELEPORT_DIMENSION_COMMAND))
+                        .suggests((s, builder) -> {
+                            for (ServerLevel dimensions : ExtraRTP.getInstance().getServer().getAllLevels()) {
+                                String dimensionName = dimensions.dimension().location().getPath().toLowerCase();
+                                if (dimensionName.startsWith(builder.getRemaining().toLowerCase())) {
+                                    builder.suggest(dimensionName);
                                 }
-                                return builder.buildFuture();
-                            })
-                            .executes(p -> executeDimension(p.getSource().getPlayerOrException(), StringArgumentType.getString(p, "dimension")))
-                            .then(Commands.argument("player", EntityArgument.player())
-                                    .requires(e -> e.hasPermission(ExtraRTP.getInstance().getPermission().getPermissionCommand().get("minecraft.command.randomteleport.dimension.player")))
-                                    .executes(e -> executeDimensionPlayer(e.getSource(), StringArgumentType.getString(e, "dimension"), EntityArgument.getPlayer(e, "player")))))
-                    .then(Commands.literal("reload")
-                            .requires(e -> e.hasPermission(ExtraRTP.getInstance().getPermission().getPermissionCommand().get("minecraft.command.randomteleport.reload")))
-                            .executes(p -> executeReload(p.getSource()))));
-        }
+                            }
+                            return builder.buildFuture();
+                        })
+                        .executes(s -> executeDimension(s.getSource().getPlayerOrException(), StringArgumentType.getString(s, "dimension")))
+                        .then(Commands.argument("player", EntityArgument.player())
+                                .requires(s -> UtilPermission.hasPermission(s, PermissionNodes.RANDOMTELEPORT_DIMENSION_PLAYER_COMMAND))
+                                .executes(e -> executeDimensionPlayer(e.getSource(), StringArgumentType.getString(e, "dimension"), EntityArgument.getPlayer(e, "player")))))
+                .then(Commands.literal("reload")
+                        .requires(s -> UtilPermission.hasPermission(s, PermissionNodes.RANDOMTELEPORT_RELOAD_COMMAND))
+                        .executes(p -> executeReload(p.getSource()))));
     }
 
     private static int execute(ServerPlayer player) {
@@ -64,7 +63,7 @@ public class RandomTeleportCommand {
                 .replace("%x%", String.valueOf((int) player.getX()))
                 .replace("%y%", String.valueOf((int) player.getY()))
                 .replace("%z%", String.valueOf((int) player.getZ()))));
-        LibPlayerFactory.addCommandCooldown(player.getUUID(), "randomTeleport", System.currentTimeMillis());
+        LibFactory.addCommandCooldown(player.getUUID(), ExtraRTP.getInstance().getConfig().getRtpCommand(), System.currentTimeMillis());
         return 1;
     }
 
@@ -97,7 +96,7 @@ public class RandomTeleportCommand {
                 .replace("%x%", String.valueOf((int) player.getX()))
                 .replace("%y%", String.valueOf((int) player.getY()))
                 .replace("%z%", String.valueOf((int) player.getZ()))));
-        LibPlayerFactory.addCommandCooldown(player.getUUID(), "randomTeleport", System.currentTimeMillis());
+        LibFactory.addCommandCooldown(player.getUUID(), ExtraRTP.getInstance().getConfig().getRtpCommand(), System.currentTimeMillis());
         return 1;
     }
 

@@ -65,7 +65,7 @@ public class RandomTeleportCommand {
                 .replace("%x%", String.valueOf((int) player.getX()))
                 .replace("%y%", String.valueOf((int) player.getY()))
                 .replace("%z%", String.valueOf((int) player.getZ()))), Util.NIL_UUID);
-        LibFactory.addCommandCooldown(player.getUUID(), "randomTeleport", System.currentTimeMillis());
+        LibFactory.addCommandCooldown(player.getUUID(), ExtraRTP.getInstance().getConfig().getRtpCommand(), System.currentTimeMillis());
         return 1;
     }
 
@@ -98,7 +98,7 @@ public class RandomTeleportCommand {
                 .replace("%x%", String.valueOf((int) player.getX()))
                 .replace("%y%", String.valueOf((int) player.getY()))
                 .replace("%z%", String.valueOf((int) player.getZ()))), Util.NIL_UUID);
-        LibFactory.addCommandCooldown(player.getUUID(), "randomTeleport", System.currentTimeMillis());
+        LibFactory.addCommandCooldown(player.getUUID(), ExtraRTP.getInstance().getConfig().getRtpCommand(), System.currentTimeMillis());
         return 1;
     }
 

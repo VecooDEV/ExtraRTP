@@ -9,20 +9,21 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class ServerConfig {
+    private String rtpCommand = "rtp";
     private String defaultWorld = "overworld";
     private int countAttemptsTeleport = 5;
     private int cooldownSecondTeleport = 60;
     private boolean throughLeaves = true;
+    private boolean firstJoinRTP = false;
     private boolean blacklistWorld = false;
     private List<String> blacklistWorldList = Arrays.asList("the_nether", "the_end");
-    private List<String> rtpCommands = Arrays.asList("rtp", "randomteleport");
     private HashMap<String, Integer> heightWorlds;
 
     public ServerConfig() {
         this.heightWorlds = new HashMap<>();
-        this.heightWorlds.put("overworld", 256);
+        this.heightWorlds.put("overworld", 319);
         this.heightWorlds.put("the_nether", 120);
-        this.heightWorlds.put("the_end", 256);
+        this.heightWorlds.put("the_end", 319);
     }
 
 
@@ -38,12 +39,16 @@ public class ServerConfig {
         return this.throughLeaves;
     }
 
-    public List<String> getRtpCommands() {
-        return this.rtpCommands;
+    public String getRtpCommand() {
+        return this.rtpCommand;
     }
 
     public boolean isBlacklistWorld() {
         return this.blacklistWorld;
+    }
+
+    public boolean isFirstJoinRTP() {
+        return this.firstJoinRTP;
     }
 
     public int getCooldownSecondTeleport() {
@@ -70,11 +75,12 @@ public class ServerConfig {
                 this.defaultWorld = config.getDefaultWorld();
                 this.countAttemptsTeleport = config.getCountAttemptsTeleport();
                 this.throughLeaves = config.isThroughLeaves();
-                this.rtpCommands = config.getRtpCommands();
+                this.rtpCommand = config.getRtpCommand();
                 this.blacklistWorld = config.isBlacklistWorld();
                 this.blacklistWorldList = config.getBlacklistWorldList();
                 this.heightWorlds = config.getHeightWorlds();
                 this.cooldownSecondTeleport = config.getCooldownSecondTeleport();
+                this.firstJoinRTP = config.isFirstJoinRTP();
             });
             if (!future.join()) {
                 write();
