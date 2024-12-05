@@ -1,10 +1,9 @@
 package com.vecoo.extrartp;
 
-import com.vecoo.extralib.permission.UtilPermissions;
 import com.vecoo.extrartp.command.RandomTeleportCommand;
 import com.vecoo.extrartp.config.LocaleConfig;
-import com.vecoo.extrartp.config.PermissionConfig;
 import com.vecoo.extrartp.config.ServerConfig;
+import com.vecoo.extrartp.listener.RTPListener;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -23,7 +22,6 @@ public class ExtraRTP {
 
     private ServerConfig config;
     private LocaleConfig locale;
-    private PermissionConfig permission;
 
     private MinecraftServer server;
 
@@ -32,9 +30,8 @@ public class ExtraRTP {
 
         this.loadConfig();
 
-        UtilPermissions.registerPermission(permission.getPermissionCommand());
-
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new RTPListener());
     }
 
     @SubscribeEvent
@@ -53,8 +50,6 @@ public class ExtraRTP {
             this.config.init();
             this.locale = new LocaleConfig();
             this.locale.init();
-            this.permission = new PermissionConfig();
-            this.permission.init();
         } catch (Exception e) {
             LOGGER.error("[ExtraRTP] Error load config.");
         }
@@ -74,10 +69,6 @@ public class ExtraRTP {
 
     public LocaleConfig getLocale() {
         return instance.locale;
-    }
-
-    public PermissionConfig getPermission() {
-        return instance.permission;
     }
 
     public MinecraftServer getServer() {

@@ -19,6 +19,12 @@ A: Only server.
 **Q: Will the mod work in single player mode?**  
 A: Should work.
 
+**Q: What java does the mod require?**  
+A: Java 8+ (1.16.5) or Java 17+ (1.19.2-1.20.1).
+
+**Q: Is the mod optimized?**  
+A: In fact, the mod has not been confirmed by any optimization systems, use it if you do not see other alternatives or you are satisfied with this.
+
 **Q: Where can I report a bug or suggest my idea for a mod?**     
 A: In my [discord server](https://discord.gg/VSGEVagRPq).
 
