@@ -1,9 +1,7 @@
 package com.vecoo.extrartp.util;
 
-import com.vecoo.extralib.ExtraLib;
 import com.vecoo.extralib.chat.UtilChat;
 import com.vecoo.extralib.permission.UtilPermission;
-import com.vecoo.extralib.storage.LibFactory;
 import com.vecoo.extrartp.ExtraRTP;
 import com.vecoo.extrartp.config.ServerConfig;
 import net.minecraft.core.BlockPos;
@@ -13,9 +11,13 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
+import java.util.HashMap;
 import java.util.Random;
+import java.util.UUID;
 
 public class Utils {
+    public static HashMap<UUID, Long> cooldown = new HashMap<>();
+
     public static boolean randomTeleport(ServerLevel level, ServerPlayer player) {
         ServerConfig config = ExtraRTP.getInstance().getConfig();
         Random random = new Random();
@@ -50,11 +52,9 @@ public class Utils {
     }
 
     public static boolean hasRandomTeleportCooldown(ServerPlayer player) {
-        String command = ExtraRTP.getInstance().getConfig().getRtpCommand();
-
-        if (LibFactory.hasCommandCooldown(player.getUUID(), command) && !UtilPermission.hasPermission(player, PermissionNodes.RANDOMTELEPORT_COOLDOWN_COMMAND)) {
+        if (cooldown.containsKey(player.getUUID()) && !UtilPermission.hasPermission(player, PermissionNodes.RANDOMTELEPORT_COOLDOWN_COMMAND)) {
             long currentTime = System.currentTimeMillis();
-            long lastUsed = ExtraLib.getInstance().getPlayerProvider().getPlayerStorage(player.getUUID()).getKeyCooldown().get(command);
+            long lastUsed = cooldown.get(player.getUUID());
             int cooldown = ExtraRTP.getInstance().getConfig().getCooldownSecondTeleport() * 1000;
 
             if (currentTime - lastUsed < cooldown) {

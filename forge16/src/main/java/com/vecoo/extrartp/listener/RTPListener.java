@@ -1,7 +1,6 @@
 package com.vecoo.extrartp.listener;
 
 import com.vecoo.extralib.chat.UtilChat;
-import com.vecoo.extralib.storage.LibFactory;
 import com.vecoo.extralib.world.UtilWorld;
 import com.vecoo.extrartp.ExtraRTP;
 import com.vecoo.extrartp.util.Utils;
@@ -36,7 +35,6 @@ public class RTPListener {
                     .replace("%x%", String.valueOf((int) player.getX()))
                     .replace("%y%", String.valueOf((int) player.getY()))
                     .replace("%z%", String.valueOf((int) player.getZ()))), Util.NIL_UUID);
-            LibFactory.addCommandCooldown(player.getUUID(), ExtraRTP.getInstance().getConfig().getRtpCommand(), System.currentTimeMillis());
         }
     }
 }

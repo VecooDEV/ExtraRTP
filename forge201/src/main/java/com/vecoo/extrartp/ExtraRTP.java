@@ -15,6 +15,8 @@ import net.minecraftforge.server.permission.events.PermissionGatherEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayList;
+
 @Mod(ExtraRTP.MOD_ID)
 public class ExtraRTP {
     public static final String MOD_ID = "extrartp";
@@ -38,11 +40,13 @@ public class ExtraRTP {
 
     @SubscribeEvent
     public void onPermissionGather(PermissionGatherEvent.Nodes event) {
-        event.addNodes(PermissionNodes.RANDOMTELEPORT_COMMAND);
-        event.addNodes(PermissionNodes.RANDOMTELEPORT_RELOAD_COMMAND);
-        event.addNodes(PermissionNodes.RANDOMTELEPORT_COOLDOWN_COMMAND);
-        event.addNodes(PermissionNodes.RANDOMTELEPORT_DIMENSION_COMMAND);
-        event.addNodes(PermissionNodes.RANDOMTELEPORT_DIMENSION_PLAYER_COMMAND);
+        PermissionNodes.permissionList.add(PermissionNodes.RANDOMTELEPORT_COMMAND);
+        PermissionNodes.permissionList.add(PermissionNodes.RANDOMTELEPORT_COOLDOWN_COMMAND);
+        PermissionNodes.permissionList.add(PermissionNodes.RANDOMTELEPORT_RELOAD_COMMAND);
+        PermissionNodes.permissionList.add(PermissionNodes.RANDOMTELEPORT_DIMENSION_COMMAND);
+        PermissionNodes.permissionList.add(PermissionNodes.RANDOMTELEPORT_DIMENSION_PLAYER_COMMAND);
+
+        event.addNodes(new ArrayList<>(PermissionNodes.permissionList));
     }
 
     @SubscribeEvent

@@ -4,7 +4,12 @@ import com.vecoo.extrartp.ExtraRTP;
 import net.minecraftforge.server.permission.nodes.PermissionNode;
 import net.minecraftforge.server.permission.nodes.PermissionTypes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PermissionNodes {
+    public static List<PermissionNode<?>> permissionList = new ArrayList<>();
+
     public static PermissionNode<Boolean> RANDOMTELEPORT_COMMAND = new PermissionNode<>(
             "minecraft",
             "command." + ExtraRTP.getInstance().getConfig().getRtpCommand(),
@@ -19,7 +24,7 @@ public class PermissionNodes {
 
     public static PermissionNode<Boolean> RANDOMTELEPORT_RELOAD_COMMAND = new PermissionNode<>(
             "minecraft",
-            "command." + ExtraRTP.getInstance().getConfig().getRtpCommand() + ".dimension.player",
+            "command." + ExtraRTP.getInstance().getConfig().getRtpCommand() + ".reload",
             PermissionTypes.BOOLEAN,
             (p, uuid, permissionDynamicContexts) -> false);
 

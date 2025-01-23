@@ -4,7 +4,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.vecoo.extralib.chat.UtilChat;
 import com.vecoo.extralib.permission.UtilPermission;
-import com.vecoo.extralib.storage.LibFactory;
 import com.vecoo.extralib.world.UtilWorld;
 import com.vecoo.extrartp.ExtraRTP;
 import com.vecoo.extrartp.util.Utils;
@@ -60,12 +59,13 @@ public class RandomTeleportCommand {
             return 0;
         }
 
+        Utils.cooldown.put(player.getUUID(), System.currentTimeMillis());
+
         player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getSuccessfulTeleport()
                 .replace("%dimension%", ExtraRTP.getInstance().getConfig().getDefaultWorld())
                 .replace("%x%", String.valueOf((int) player.getX()))
                 .replace("%y%", String.valueOf((int) player.getY()))
                 .replace("%z%", String.valueOf((int) player.getZ()))), Util.NIL_UUID);
-        LibFactory.addCommandCooldown(player.getUUID(), ExtraRTP.getInstance().getConfig().getRtpCommand(), System.currentTimeMillis());
         return 1;
     }
 
@@ -93,12 +93,13 @@ public class RandomTeleportCommand {
             return 0;
         }
 
+        Utils.cooldown.put(player.getUUID(), System.currentTimeMillis());
+
         player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getSuccessfulTeleport()
                 .replace("%dimension%", dimension)
                 .replace("%x%", String.valueOf((int) player.getX()))
                 .replace("%y%", String.valueOf((int) player.getY()))
                 .replace("%z%", String.valueOf((int) player.getZ()))), Util.NIL_UUID);
-        LibFactory.addCommandCooldown(player.getUUID(), ExtraRTP.getInstance().getConfig().getRtpCommand(), System.currentTimeMillis());
         return 1;
     }
 
