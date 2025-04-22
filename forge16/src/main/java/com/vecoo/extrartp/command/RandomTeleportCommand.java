@@ -6,6 +6,9 @@ import com.vecoo.extralib.chat.UtilChat;
 import com.vecoo.extralib.permission.UtilPermission;
 import com.vecoo.extralib.world.UtilWorld;
 import com.vecoo.extrartp.ExtraRTP;
+import com.vecoo.extrartp.api.factory.ExtraRTPFactory;
+import com.vecoo.extrartp.config.LocaleConfig;
+import com.vecoo.extrartp.config.ServerConfig;
 import com.vecoo.extrartp.util.Utils;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
@@ -16,13 +19,11 @@ import net.minecraft.world.server.ServerWorld;
 
 public class RandomTeleportCommand {
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
-        String permissionNode = "minecraft.command." + ExtraRTP.getInstance().getConfig().getRtpCommand();
-
-        dispatcher.register(Commands.literal(ExtraRTP.getInstance().getConfig().getRtpCommand())
-                .requires(s -> UtilPermission.hasPermission(s, permissionNode))
-                .executes(e -> execute(e.getSource().getPlayerOrException()))
+        dispatcher.register(Commands.literal("rtp")
+                .requires(p -> UtilPermission.hasPermission(p, "minecraft.command.rtp"))
+                .executes(e -> executeRTP(e.getSource().getPlayerOrException()))
                 .then(Commands.argument("dimension", StringArgumentType.string())
-                        .requires(s -> UtilPermission.hasPermission(s, permissionNode + ".dimension"))
+                        .requires(p -> UtilPermission.hasPermission(p, "minecraft.command.rtp.dimension"))
                         .suggests((s, builder) -> {
                             for (ServerWorld dimensions : ExtraRTP.getInstance().getServer().getAllLevels()) {
                                 String dimensionName = dimensions.dimension().location().getPath().toLowerCase();
@@ -32,21 +33,24 @@ public class RandomTeleportCommand {
                             }
                             return builder.buildFuture();
                         })
-                        .executes(s -> executeDimension(s.getSource().getPlayerOrException(), StringArgumentType.getString(s, "dimension")))
+                        .executes(s -> executeRTPDimension(s.getSource().getPlayerOrException(), StringArgumentType.getString(s, "dimension")))
                         .then(Commands.argument("player", EntityArgument.player())
-                                .requires(s -> UtilPermission.hasPermission(s, permissionNode + ".dimension.player"))
-                                .executes(e -> executeDimensionPlayer(e.getSource(), StringArgumentType.getString(e, "dimension"), EntityArgument.getPlayer(e, "player")))))
+                                .requires(s -> UtilPermission.hasPermission(s, "minecraft.command.rtp.dimension.player"))
+                                .executes(e -> executeRTPDimensionPlayer(e.getSource(), StringArgumentType.getString(e, "dimension"), EntityArgument.getPlayer(e, "player")))))
                 .then(Commands.literal("reload")
-                        .requires(s -> UtilPermission.hasPermission(s, permissionNode + ".reload"))
+                        .requires(s -> UtilPermission.hasPermission(s, "minecraft.command.rtp.reload"))
                         .executes(e -> executeReload(e.getSource()))));
     }
 
-    private static int execute(ServerPlayerEntity player) {
-        ServerWorld world = UtilWorld.getWorldByName(ExtraRTP.getInstance().getConfig().getDefaultWorld(), ExtraRTP.getInstance().getServer());
+    private static int executeRTP(ServerPlayerEntity player) {
+        ServerConfig config = ExtraRTP.getInstance().getConfig();
+        LocaleConfig localeConfig = ExtraRTP.getInstance().getLocale();
+
+        ServerWorld world = UtilWorld.getWorldByName(config.getDefaultWorld(), ExtraRTP.getInstance().getServer());
 
         if (world == null) {
-            player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getNotDimensionFound()
-                    .replace("%dimension%", ExtraRTP.getInstance().getConfig().getDefaultWorld())), Util.NIL_UUID);
+            player.sendMessage(UtilChat.formatMessage(localeConfig.getNotDimensionFound()
+                    .replace("%dimension%", config.getDefaultWorld())), Util.NIL_UUID);
             return 0;
         }
 
@@ -54,32 +58,34 @@ public class RandomTeleportCommand {
             return 0;
         }
 
-        if (!Utils.randomTeleport(world, player)) {
-            player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getFailedTeleport()), Util.NIL_UUID);
-            return 0;
-        }
+        ExtraRTPFactory.randomTeleport(world, player).thenAccept(success -> {
+            if (!success) {
+                player.sendMessage(UtilChat.formatMessage(localeConfig.getFailedTeleport()), Util.NIL_UUID);
+            } else {
+                Utils.cooldown.put(player.getUUID(), System.currentTimeMillis());
 
-        Utils.cooldown.put(player.getUUID(), System.currentTimeMillis());
-
-        player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getSuccessfulTeleport()
-                .replace("%dimension%", ExtraRTP.getInstance().getConfig().getDefaultWorld())
-                .replace("%x%", String.valueOf((int) player.getX()))
-                .replace("%y%", String.valueOf((int) player.getY()))
-                .replace("%z%", String.valueOf((int) player.getZ()))), Util.NIL_UUID);
+                player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getSuccessfulTeleport()
+                        .replace("%dimension%", ExtraRTP.getInstance().getConfig().getDefaultWorld())), Util.NIL_UUID);
+            }
+        });
         return 1;
     }
 
-    private static int executeDimension(ServerPlayerEntity player, String dimension) {
+    private static int executeRTPDimension(ServerPlayerEntity player, String dimension) {
         ServerWorld world = UtilWorld.getWorldByName(dimension, ExtraRTP.getInstance().getServer());
 
+        LocaleConfig localeConfig = ExtraRTP.getInstance().getLocale();
+
         if (world == null) {
-            player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getNotDimensionFound()
+            player.sendMessage(UtilChat.formatMessage(localeConfig.getNotDimensionFound()
                     .replace("%dimension%", dimension)), Util.NIL_UUID);
             return 0;
         }
 
-        if (ExtraRTP.getInstance().getConfig().isBlacklistWorld() && ExtraRTP.getInstance().getConfig().getBlacklistWorldList().contains(dimension.toLowerCase())) {
-            player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getDimensionBlacklist()
+        ServerConfig config = ExtraRTP.getInstance().getConfig();
+
+        if (config.isBlacklistWorld() && config.getBlacklistWorldList().contains(dimension.toLowerCase())) {
+            player.sendMessage(UtilChat.formatMessage(localeConfig.getDimensionBlacklist()
                     .replace("%dimension%", dimension.toLowerCase())), Util.NIL_UUID);
             return 0;
         }
@@ -88,41 +94,39 @@ public class RandomTeleportCommand {
             return 0;
         }
 
-        if (!Utils.randomTeleport(world, player)) {
-            player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getFailedTeleport()), Util.NIL_UUID);
-            return 0;
-        }
+        ExtraRTPFactory.randomTeleport(world, player).thenAccept(success -> {
+            if (!success) {
+                player.sendMessage(UtilChat.formatMessage(localeConfig.getFailedTeleport()), Util.NIL_UUID);
+            } else {
+                Utils.cooldown.put(player.getUUID(), System.currentTimeMillis());
 
-        Utils.cooldown.put(player.getUUID(), System.currentTimeMillis());
-
-        player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getSuccessfulTeleport()
-                .replace("%dimension%", dimension)
-                .replace("%x%", String.valueOf((int) player.getX()))
-                .replace("%y%", String.valueOf((int) player.getY()))
-                .replace("%z%", String.valueOf((int) player.getZ()))), Util.NIL_UUID);
+                player.sendMessage(UtilChat.formatMessage(localeConfig.getSuccessfulTeleport()
+                        .replace("%dimension%", dimension)), Util.NIL_UUID);
+            }
+        });
         return 1;
     }
 
-    private static int executeDimensionPlayer(CommandSource source, String dimension, ServerPlayerEntity player) {
+    private static int executeRTPDimensionPlayer(CommandSource source, String dimension, ServerPlayerEntity player) {
         ServerWorld world = UtilWorld.getWorldByName(dimension, ExtraRTP.getInstance().getServer());
 
+        LocaleConfig localeConfig = ExtraRTP.getInstance().getLocale();
+
         if (world == null) {
-            source.sendSuccess(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getNotDimensionFound()
+            source.sendSuccess(UtilChat.formatMessage(localeConfig.getNotDimensionFound()
                     .replace("%dimension%", dimension)), false);
             return 0;
         }
 
-        if (!Utils.randomTeleport(world, player)) {
-            source.sendSuccess(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getFailedTeleport()), false);
-            return 0;
-        }
-
-        source.sendSuccess(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getSuccessfulTeleportPlayer()
-                .replace("%dimension%", dimension.toLowerCase())
-                .replace("%player%", player.getGameProfile().getName())
-                .replace("%x%", String.valueOf((int) player.getX()))
-                .replace("%y%", String.valueOf((int) player.getY()))
-                .replace("%z%", String.valueOf((int) player.getZ()))), false);
+        ExtraRTPFactory.randomTeleport(world, player).thenAccept(success -> {
+            if (!success) {
+                player.sendMessage(UtilChat.formatMessage(localeConfig.getFailedTeleport()), Util.NIL_UUID);
+            } else {
+                source.sendSuccess(UtilChat.formatMessage(localeConfig.getSuccessfulTeleportPlayer()
+                        .replace("%dimension%", dimension.toLowerCase())
+                        .replace("%player%", player.getName().getString())), false);
+            }
+        });
         return 1;
     }
 

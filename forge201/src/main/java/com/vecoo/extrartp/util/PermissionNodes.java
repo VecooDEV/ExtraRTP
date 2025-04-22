@@ -1,6 +1,5 @@
 package com.vecoo.extrartp.util;
 
-import com.vecoo.extrartp.ExtraRTP;
 import net.minecraftforge.server.permission.nodes.PermissionNode;
 import net.minecraftforge.server.permission.nodes.PermissionTypes;
 
@@ -8,35 +7,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PermissionNodes {
-    public static List<PermissionNode<Boolean>> permissionList = new ArrayList<>();
+    public static List<PermissionNode<?>> permissionList = new ArrayList<>();
 
     public static PermissionNode<Boolean> RANDOMTELEPORT_COMMAND = new PermissionNode<>(
             "minecraft",
-            "command." + ExtraRTP.getInstance().getConfig().getRtpCommand(),
+            "command.rtp",
             PermissionTypes.BOOLEAN,
             (p, uuid, permissionDynamicContexts) -> false);
 
-    public static PermissionNode<Boolean> RANDOMTELEPORT_COOLDOWN_COMMAND = new PermissionNode<>(
+    public static PermissionNode<Boolean> RANDOMTELEPORT_COOLDOWN = new PermissionNode<>(
             "minecraft",
-            "command." + ExtraRTP.getInstance().getConfig().getRtpCommand() + ".cooldown",
+            "command.rtp.cooldown",
             PermissionTypes.BOOLEAN,
             (p, uuid, permissionDynamicContexts) -> false);
 
     public static PermissionNode<Boolean> RANDOMTELEPORT_RELOAD_COMMAND = new PermissionNode<>(
             "minecraft",
-            "command." + ExtraRTP.getInstance().getConfig().getRtpCommand() + ".reload",
+            "command.rtp.reload",
             PermissionTypes.BOOLEAN,
             (p, uuid, permissionDynamicContexts) -> false);
 
     public static PermissionNode<Boolean> RANDOMTELEPORT_DIMENSION_COMMAND = new PermissionNode<>(
             "minecraft",
-            "command." + ExtraRTP.getInstance().getConfig().getRtpCommand() + ".dimension",
+            "command.rtp.dimension",
             PermissionTypes.BOOLEAN,
             (p, uuid, permissionDynamicContexts) -> false);
 
     public static PermissionNode<Boolean> RANDOMTELEPORT_DIMENSION_PLAYER_COMMAND = new PermissionNode<>(
             "minecraft",
-            "command." + ExtraRTP.getInstance().getConfig().getRtpCommand() + ".dimension.player",
+            "command.rtp.dimension.player",
             PermissionTypes.BOOLEAN,
             (p, uuid, permissionDynamicContexts) -> false);
 }

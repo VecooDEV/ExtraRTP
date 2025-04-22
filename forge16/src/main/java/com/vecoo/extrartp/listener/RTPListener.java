@@ -3,7 +3,7 @@ package com.vecoo.extrartp.listener;
 import com.vecoo.extralib.chat.UtilChat;
 import com.vecoo.extralib.world.UtilWorld;
 import com.vecoo.extrartp.ExtraRTP;
-import com.vecoo.extrartp.util.Utils;
+import com.vecoo.extrartp.api.factory.ExtraRTPFactory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.Util;
 import net.minecraft.world.server.ServerWorld;
@@ -25,16 +25,14 @@ public class RTPListener {
                 return;
             }
 
-            if (!Utils.randomTeleport(world, player)) {
-                player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getFailedTeleport()), Util.NIL_UUID);
-                return;
-            }
-
-            player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getSuccessfulTeleport()
-                    .replace("%dimension%", ExtraRTP.getInstance().getConfig().getDefaultWorld())
-                    .replace("%x%", String.valueOf((int) player.getX()))
-                    .replace("%y%", String.valueOf((int) player.getY()))
-                    .replace("%z%", String.valueOf((int) player.getZ()))), Util.NIL_UUID);
+            ExtraRTPFactory.randomTeleport(world, player).thenAccept(success -> {
+                if (!success) {
+                    player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getFailedTeleport()), Util.NIL_UUID);
+                } else {
+                    player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getSuccessfulTeleport()
+                            .replace("%dimension%", ExtraRTP.getInstance().getConfig().getDefaultWorld())), Util.NIL_UUID);
+                }
+            });
         }
     }
 }

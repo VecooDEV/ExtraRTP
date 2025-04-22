@@ -41,7 +41,7 @@ public class ExtraRTP {
     @SubscribeEvent
     public void onPermissionGather(PermissionGatherEvent.Nodes event) {
         PermissionNodes.permissionList.add(PermissionNodes.RANDOMTELEPORT_COMMAND);
-        PermissionNodes.permissionList.add(PermissionNodes.RANDOMTELEPORT_COOLDOWN_COMMAND);
+        PermissionNodes.permissionList.add(PermissionNodes.RANDOMTELEPORT_COOLDOWN);
         PermissionNodes.permissionList.add(PermissionNodes.RANDOMTELEPORT_RELOAD_COMMAND);
         PermissionNodes.permissionList.add(PermissionNodes.RANDOMTELEPORT_DIMENSION_COMMAND);
         PermissionNodes.permissionList.add(PermissionNodes.RANDOMTELEPORT_DIMENSION_PLAYER_COMMAND);
@@ -66,7 +66,7 @@ public class ExtraRTP {
             this.locale = new LocaleConfig();
             this.locale.init();
         } catch (Exception e) {
-            LOGGER.error("[ExtraRTP] Error load config.");
+            LOGGER.error("[ExtraRTP] Error load config.", e);
         }
     }
 

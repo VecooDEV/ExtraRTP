@@ -10,6 +10,8 @@ import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
+import net.minecraftforge.server.permission.DefaultPermissionLevel;
+import net.minecraftforge.server.permission.PermissionAPI;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -42,6 +44,12 @@ public class ExtraRTP {
     @SubscribeEvent
     public void onServerStarting(FMLServerStartingEvent event) {
         this.server = event.getServer();
+
+        PermissionAPI.registerNode("minecraft.command.rtp", DefaultPermissionLevel.OP, "/rtp");
+        PermissionAPI.registerNode("minecraft.command.rtp.dimension", DefaultPermissionLevel.OP, "/rtp <dimension>");
+        PermissionAPI.registerNode("minecraft.command.rtp.dimension.player", DefaultPermissionLevel.OP, "/rtp <dimension> <player>");
+        PermissionAPI.registerNode("minecraft.command.rtp.cooldown", DefaultPermissionLevel.OP, "Cooldown rtp command");
+        PermissionAPI.registerNode("minecraft.command.rtp.reload", DefaultPermissionLevel.OP, "/rtp reload");
     }
 
     public void loadConfig() {
@@ -51,7 +59,7 @@ public class ExtraRTP {
             this.locale = new LocaleConfig();
             this.locale.init();
         } catch (Exception e) {
-            LOGGER.error("[ExtraRTP] Error load config.");
+            LOGGER.error("[ExtraRTP] Error load config.", e);
         }
     }
 

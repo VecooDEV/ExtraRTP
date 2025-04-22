@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class ServerConfig {
-    private String rtpCommand = "rtp";
     private String defaultWorld = "overworld";
     private int countAttemptsTeleport = 5;
     private int cooldownSecondTeleport = 60;
@@ -37,10 +36,6 @@ public class ServerConfig {
 
     public boolean isThroughLeaves() {
         return this.throughLeaves;
-    }
-
-    public String getRtpCommand() {
-        return this.rtpCommand;
     }
 
     public boolean isBlacklistWorld() {
@@ -75,7 +70,6 @@ public class ServerConfig {
                 this.defaultWorld = config.getDefaultWorld();
                 this.countAttemptsTeleport = config.getCountAttemptsTeleport();
                 this.throughLeaves = config.isThroughLeaves();
-                this.rtpCommand = config.getRtpCommand();
                 this.blacklistWorld = config.isBlacklistWorld();
                 this.blacklistWorldList = config.getBlacklistWorldList();
                 this.heightWorlds = config.getHeightWorlds();
@@ -86,7 +80,7 @@ public class ServerConfig {
                 write();
             }
         } catch (Exception e) {
-            ExtraRTP.getLogger().error("[ExtraRTP] Error in config.");
+            ExtraRTP.getLogger().error("[ExtraRTP] Error in config.", e);
             write();
         }
     }

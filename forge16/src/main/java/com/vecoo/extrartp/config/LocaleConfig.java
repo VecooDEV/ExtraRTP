@@ -6,9 +6,9 @@ import com.vecoo.extrartp.ExtraRTP;
 import java.util.concurrent.CompletableFuture;
 
 public class LocaleConfig {
-    private String configReload = "&e(!) Configs reloaded! If you have changed the main command, please restart the server.";
-    private String successfulTeleport = "&e(!) You have been successfully teleported dimension %dimension% to coordinates: X: %x%, Y: %y%, Z: %z%.";
-    private String successfulTeleportPlayer = "&e(!) You have been successfully teleported player %player% dimension %dimension% to coordinates: X: %x%, Y: %y%, Z: %z%.";
+    private String configReload = "&e(!) Configs reloaded.";
+    private String successfulTeleport = "&e(!) You have been successfully teleported dimension %dimension%.";
+    private String successfulTeleportPlayer = "&e(!) You have been successfully teleported player %player% dimension %dimension%.";
     private String cooldownTeleport = "&e(!) Random teleportation on cooldown, %cooldown% seconds remaining.";
 
     private String dimensionBlacklist = "&c(!) The dimension %dimension% is blacklisted.";
@@ -64,7 +64,7 @@ public class LocaleConfig {
                 write();
             }
         } catch (Exception e) {
-            ExtraRTP.getLogger().error("[ExtraRTP] Error in locale config.");
+            ExtraRTP.getLogger().error("[ExtraRTP] Error in locale config.", e);
             write();
         }
     }

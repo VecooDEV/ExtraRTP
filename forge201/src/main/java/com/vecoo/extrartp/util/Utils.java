@@ -4,71 +4,44 @@ import com.vecoo.extralib.chat.UtilChat;
 import com.vecoo.extralib.permission.UtilPermission;
 import com.vecoo.extrartp.ExtraRTP;
 import com.vecoo.extrartp.config.ServerConfig;
-import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 
 import java.util.HashMap;
-import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class Utils {
     public static HashMap<UUID, Long> cooldown = new HashMap<>();
 
-    public static boolean randomTeleport(ServerLevel level, ServerPlayer player) {
-        ServerConfig config = ExtraRTP.getInstance().getConfig();
-        Random random = new Random();
-        int height = heightStart(level.dimension().location().getPath());
-
-        for (int attempts = 0; attempts < config.getCountAttemptsTeleport(); attempts++) {
-            BlockPos pos = new BlockPos(random.nextInt((int) level.getWorldBorder().getMaxX()), height, random.nextInt((int) level.getWorldBorder().getMaxZ()));
-
-            while (pos.getY() > 0) {
-                Block block = level.getBlockState(pos).getBlock();
-
-                if (block.defaultBlockState().isAir() || block.defaultBlockState().is(BlockTags.LEAVES) && config.isThroughLeaves() || !block.defaultBlockState().isCollisionShapeFullBlock(level, pos)) {
-                    pos = pos.below();
-                    continue;
-                }
-
-                Block checkBlock = level.getBlockState(pos.above()).getBlock();
-
-                if (checkBlock.defaultBlockState().is(Blocks.WATER) || checkBlock.defaultBlockState().is(Blocks.LAVA)) {
-                    break;
-                }
-
-                if (!checkBlock.defaultBlockState().isAir() || !level.getBlockState(pos.above(2)).getBlock().defaultBlockState().isAir()) {
-                    break;
-                }
-
-                player.teleportTo(level, pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5, player.getYRot(), player.getXRot());
-                return true;
-            }
-        }
-        return false;
-    }
-
     public static boolean hasRandomTeleportCooldown(ServerPlayer player) {
-        if (cooldown.containsKey(player.getUUID()) && !UtilPermission.hasPermission(player, PermissionNodes.RANDOMTELEPORT_COOLDOWN_COMMAND)) {
-            long currentTime = System.currentTimeMillis();
-            long lastUsed = cooldown.get(player.getUUID());
-            int cooldown = ExtraRTP.getInstance().getConfig().getCooldownSecondTeleport() * 1000;
-
-            if (currentTime - lastUsed < cooldown) {
-                player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getCooldownTeleport()
-                        .replace("%cooldown%", String.valueOf((cooldown - (currentTime - lastUsed)) / 1000))));
-                return true;
-            }
+        if (UtilPermission.hasPermission(player, PermissionNodes.RANDOMTELEPORT_COOLDOWN)) {
+            return false;
         }
+
+        UUID playerUUID = player.getUUID();
+
+        if (!cooldown.containsKey(playerUUID)) {
+            return false;
+        }
+
+        long cooldownMillis = TimeUnit.SECONDS.toMillis(ExtraRTP.getInstance().getConfig().getCooldownSecondTeleport());
+        long timePassed = System.currentTimeMillis() - cooldown.get(playerUUID);
+
+        if (timePassed < cooldownMillis) {
+            player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getCooldownTeleport()
+                    .replace("%cooldown%", String.valueOf(TimeUnit.MILLISECONDS.toSeconds(cooldownMillis - timePassed)))));
+            return true;
+        }
+
+        cooldown.remove(playerUUID);
         return false;
     }
 
     public static int heightStart(String dimension) {
-        if (ExtraRTP.getInstance().getConfig().getHeightWorlds().containsKey(dimension)) {
-            return ExtraRTP.getInstance().getConfig().getHeightWorlds().get(dimension);
+        ServerConfig config = ExtraRTP.getInstance().getConfig();
+
+        if (config.getHeightWorlds().containsKey(dimension)) {
+            return config.getHeightWorlds().get(dimension);
         }
 
         return 319;
