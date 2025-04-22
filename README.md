@@ -1,37 +1,18 @@
-# ExtraRTP
-A mod that adds a system of random teleportation across dimensions.
+![](https://i.imgur.com/WB5YJsT.png)   
+[![](https://i.imgur.com/B4evs2K.png)](https://discord.gg/VSGEVagRPq) [![](https://i.imgur.com/uquQMuU.png)](https://github.com/VecooDEV/ExtraRTP/wiki) [![](https://i.imgur.com/eaHjYUQ.png)](https://www.patreon.com/Vecoo) [![](https://i.imgur.com/yPBPV5c.png)](https://ko-fi.com/vecoo)
 
-## Features
-* Unloaded teleportation system.
-* Teleportation across all dimensions.
-* Fine-tuning the entire teleportation process.
-* Possibility to teleport on the first visit.
+![](https://i.imgur.com/uC23hGv.png)
+* Optimized random teleportation system.
+* Teleportation across all available dimensions.
+* Ability to teleport on first entry.
+* Random teleportation cooldown.
+* Full mod customization.
 
-## Commands & Permissions
-You can read more on the [wiki](https://github.com/VecooDEV/ExtraRTP/wiki/Commands-&-Permissions) page.
+![](https://i.imgur.com/AACXM1B.png)
+* We write a command and teleport to a random point in the world, there is also a teleportation cooldown so as not to overload the server.
 
-## Additional dependencies
-* [ExtraLib](https://modrinth.com/mod/extralib)
+![](https://i.imgur.com/iCmv0br.png)   
+[<img height="150" src="https://i.imgur.com/suGlOwq.png" width="150"/>](https://www.curseforge.com/minecraft/mc-mods/extralib)
 
-## FAQ
-**Q: Do I need to install this on both server and client?**  
-A: Only server.
-
-**Q: Will the mod work in single player mode?**  
-A: Should work.
-
-**Q: What java does the mod require?**  
-A: Java 8+ (1.16.5) or Java 17+ (1.19.2-1.20.1).
-
-**Q: Is the mod optimized?**  
-A: In fact, the mod has not been confirmed by any optimization systems, use it if you do not see other alternatives or you are satisfied with this.
-
-**Q: Where can I report a bug or suggest my idea for a mod?**     
-A: In my [discord server](https://discord.gg/VSGEVagRPq).
-
-## Support Me
-A lot of effort goes into creating and updating mods. If you want to support me, you can do so on [Patreon](https://www.patreon.com/Vecoo) or [Boosty](https://boosty.to/vecoo).
-
-## Download
-* [Modrinth](https://modrinth.com/mod/extrartp)
-* [CurseForge](https://www.curseforge.com/minecraft/mc-mods/extrartp)
+![](https://i.imgur.com/lX7HG2b.png)   
+[![](https://i.imgur.com/x3JMFRv.png)](https://www.curseforge.com/minecraft/mc-mods/extrartp) [![](https://i.imgur.com/Q6tm4Fv.png)](https://modrinth.com/mod/extrartp)
