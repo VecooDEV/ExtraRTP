@@ -4,8 +4,8 @@ license = "All Rights Reserved"
 
 [[mods]]
 modId = "extrartp"
-version = "1.3.0"
-displayName = "ExtraRTP"
+version = "${project_version}"
+displayName = "${project_name}"
 logoFile = "logo.png"
 authors = "Vecoo"
 description = "A mod that adds a system of random teleportation across dimensions."

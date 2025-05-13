@@ -1,0 +1,34 @@
+plugins {
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+minecraftVersion = "1.20.1-Forge"
+
+minecraft {
+    mappings channel: 'official', version: '1.20.1'
+    copyIdeResources = true
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+repositories {}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:1.20.1-${forge_version_20}"
+
+    compileOnly fg.deobf("maven.modrinth:extralib:${extralib_version}-forge,1.20.1")
+}
+
+processResources {
+    filesMatching('META-INF/mods.toml') {
+        expand(
+                'project_name': project_name,
+                'project_version': project_version
+        )
+    }
+}
+
+jar.finalizedBy('reobfJar')
+build.finalizedBy('versionedRelease')

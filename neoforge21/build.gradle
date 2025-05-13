@@ -1,0 +1,28 @@
+plugins {
+    id 'net.neoforged.gradle.userdev' version '7.0.184'
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+minecraftVersion = "1.21.1-NeoForge"
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+repositories {}
+
+dependencies {
+    implementation "net.neoforged:neoforge:${neoforge_version_21}"
+
+    compileOnly "maven.modrinth:extralib:${extralib_version}-neoforge,1.21.1"
+}
+
+processResources {
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand(
+                'project_name': project_name,
+                'project_version': project_version
+        )
+    }
+}
+
+build.finalizedBy('versionedRelease')

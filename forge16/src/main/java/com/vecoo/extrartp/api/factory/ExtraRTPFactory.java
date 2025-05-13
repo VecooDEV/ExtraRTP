@@ -1,6 +1,7 @@
 package com.vecoo.extrartp.api.factory;
 
 import com.vecoo.extrartp.ExtraRTP;
+import com.vecoo.extrartp.api.events.RandomTeleportEvent;
 import com.vecoo.extrartp.config.ServerConfig;
 import com.vecoo.extrartp.util.Utils;
 import net.minecraft.block.Block;
@@ -12,6 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.border.WorldBorder;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.MinecraftForge;
 
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
@@ -54,9 +56,14 @@ public class ExtraRTPFactory {
                     }
 
                     ExtraRTP.getInstance().getServer().execute(() -> {
-                        player.teleportTo(world, blockPos.getX() + 0.5, blockPos.getY() + 1.0, blockPos.getZ() + 0.5, player.yRot, player.xRot);
+                        RandomTeleportEvent event = new RandomTeleportEvent(player, world, blockPos.getX() + 0.5, blockPos.getY() + 1.0, blockPos.getZ() + 0.5, player.yRot, player.xRot);
+
+                        MinecraftForge.EVENT_BUS.post(event);
+
+                        player.teleportTo(event.getWorld(), event.getX(), event.getY(), event.getZ(), event.getYRot(), event.getXRot());
                         player.setDeltaMovement(Vector3d.ZERO);
                     });
+
                     return true;
                 }
             }
