@@ -56,9 +56,11 @@ public class ExtraRTPFactory {
                     }
 
                     ExtraRTP.getInstance().getServer().execute(() -> {
-                        RandomTeleportEvent event = new RandomTeleportEvent(player, level, blockPos.getX() + 0.5, blockPos.getY() + 1.0, blockPos.getZ() + 0.5, player.getYRot(), player.getXRot());
+                        RandomTeleportEvent.Successful event = new RandomTeleportEvent.Successful(player, level, blockPos.getX() + 0.5, blockPos.getY() + 1.0, blockPos.getZ() + 0.5, player.getYRot(), player.getXRot());
 
-                        NeoForge.EVENT_BUS.post(event);
+                        if (NeoForge.EVENT_BUS.post(event).isCanceled()) {
+                            return;
+                        }
 
                         player.teleportTo(event.getLevel(), event.getX(), event.getY(), event.getZ(), event.getYRot(), event.getXRot());
                         player.setDeltaMovement(Vec3.ZERO);

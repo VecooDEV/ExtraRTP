@@ -12,6 +12,7 @@ import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.server.permission.events.PermissionGatherEvent;
+import net.minecraftforge.server.permission.nodes.PermissionNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -46,7 +47,11 @@ public class ExtraRTP {
         PermissionNodes.permissionList.add(PermissionNodes.RANDOMTELEPORT_DIMENSION_COMMAND);
         PermissionNodes.permissionList.add(PermissionNodes.RANDOMTELEPORT_DIMENSION_PLAYER_COMMAND);
 
-        event.addNodes(new ArrayList<>(PermissionNodes.permissionList));
+        for (PermissionNode<?> node : PermissionNodes.permissionList) {
+            if (!event.getNodes().contains(node)) {
+                event.addNodes(node);
+            }
+        }
     }
 
     @SubscribeEvent

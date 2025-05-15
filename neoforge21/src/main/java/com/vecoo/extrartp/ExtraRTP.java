@@ -12,6 +12,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.server.permission.events.PermissionGatherEvent;
+import net.neoforged.neoforge.server.permission.nodes.PermissionNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -46,7 +47,11 @@ public class ExtraRTP {
         PermissionNodes.permissionList.add(PermissionNodes.RANDOMTELEPORT_DIMENSION_COMMAND);
         PermissionNodes.permissionList.add(PermissionNodes.RANDOMTELEPORT_DIMENSION_PLAYER_COMMAND);
 
-        event.addNodes(new ArrayList<>(PermissionNodes.permissionList));
+        for (PermissionNode<?> node : PermissionNodes.permissionList) {
+            if (!event.getNodes().contains(node)) {
+                event.addNodes(node);
+            }
+        }
     }
 
     @SubscribeEvent

@@ -19,6 +19,6 @@
     "fabric": "*",
     "minecraft": "<=1.16.5",
     "java": ">=8",
-    "extralib": ">=1.6.0"
+    "extralib": ">=1.6.2"
   }
 }

@@ -3,8 +3,9 @@ package com.vecoo.extrartp.api.events;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.Event;
+import net.neoforged.bus.api.ICancellableEvent;
 
-public class RandomTeleportEvent extends Event {
+public abstract class RandomTeleportEvent extends Event {
     private final ServerPlayer player;
     private ServerLevel level;
     private double x;
@@ -73,5 +74,11 @@ public class RandomTeleportEvent extends Event {
 
     public void setXRot(float xRot) {
         this.xRot = xRot;
+    }
+
+    public static class Successful extends RandomTeleportEvent implements ICancellableEvent {
+        public Successful(ServerPlayer player, ServerLevel level, double x, double y, double z, float yRot, float xRot) {
+            super(player, level, x, y, z, yRot, xRot);
+        }
     }
 }

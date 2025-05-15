@@ -20,10 +20,10 @@ import net.minecraft.server.level.ServerPlayer;
 public class RandomTeleportCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, boolean dedicated) {
         dispatcher.register(Commands.literal("rtp")
-                .requires(p -> UtilPermission.hasPermission(p, "minecraft.command.rtp", ExtraRTP.getInstance().getConfig().getRtpPermissionLevel()))
+                .requires(p -> UtilPermission.hasPermission(p, "minecraft.command.rtp"))
                 .executes(e -> executeRTP(e.getSource().getPlayerOrException()))
                 .then(Commands.argument("dimension", StringArgumentType.string())
-                        .requires(p -> UtilPermission.hasPermission(p, "minecraft.command.rtp.dimension", ExtraRTP.getInstance().getConfig().getRtpPermissionLevel()))
+                        .requires(p -> UtilPermission.hasPermission(p, "minecraft.command.rtp.dimension"))
                         .suggests((s, builder) -> {
                             for (ServerLevel dimensions : ExtraRTP.getInstance().getServer().getAllLevels()) {
                                 String dimensionName = dimensions.dimension().location().getPath().toLowerCase();
@@ -35,10 +35,10 @@ public class RandomTeleportCommand {
                         })
                         .executes(s -> executeRTPDimension(s.getSource().getPlayerOrException(), StringArgumentType.getString(s, "dimension")))
                         .then(Commands.argument("player", EntityArgument.player())
-                                .requires(s -> UtilPermission.hasPermission(s, "minecraft.command.rtp.dimension.player", ExtraRTP.getInstance().getConfig().getRtpDimensionPermissionLevel()))
+                                .requires(s -> UtilPermission.hasPermission(s, "minecraft.command.rtp.dimension.player"))
                                 .executes(e -> executeRTPDimensionPlayer(e.getSource(), StringArgumentType.getString(e, "dimension"), EntityArgument.getPlayer(e, "player")))))
                 .then(Commands.literal("reload")
-                        .requires(s -> UtilPermission.hasPermission(s, "minecraft.command.rtp.reload", 4))
+                        .requires(s -> UtilPermission.hasPermission(s, "minecraft.command.rtp.reload"))
                         .executes(e -> executeReload(e.getSource()))));
     }
 

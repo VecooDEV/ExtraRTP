@@ -15,7 +15,7 @@ public class Utils {
     public static HashMap<UUID, Long> cooldown = new HashMap<>();
 
     public static boolean hasRandomTeleportCooldown(ServerPlayer player) {
-        if (UtilPermission.hasPermission(player, "minecraft.command.rtp.cooldown", ExtraRTP.getInstance().getConfig().getRtpCooldownPermissionLevel())) {
+        if (UtilPermission.hasPermission(player, "minecraft.command.rtp.cooldown")) {
             return false;
         }
 

@@ -5,10 +5,6 @@ subprojects {
     group = 'com.vecoo.extrartp'
     version = project_version
 
-    ext {
-        minecraftVersion  = "none"
-    }
-
     jar {
         setArchiveBaseName("${rootProject.name}")
     }
@@ -23,14 +19,20 @@ subprojects {
     }
 
     task versionedRelease(type: Copy) {
+        group "build"
+
         delete fileTree('../release/') {
             include '**/*.jar'
         }
-        group "build"
-        from("./build/libs/${rootProject.name}-${version}.jar")
-        into('../release/')
-        include '*.jar'
-        rename { filename -> "${rootProject.name}-${project.version}-${minecraftVersion }.jar"
+
+        from fileTree("/build/libs/") {
+            include '**/*.jar'
         }
+
+        doLast {
+            delete "build/libs"
+        }
+
+        into('../release/')
     }
 }

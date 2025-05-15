@@ -17,10 +17,6 @@ public class ServerConfig {
     private List<String> blacklistWorldList = Arrays.asList("the_nether", "the_end");
     private HashMap<String, Integer> heightWorlds;
 
-    private int rtpPermissionLevel = 0;
-    private int rtpDimensionPermissionLevel = 4;
-    private int rtpCooldownPermissionLevel = 4;
-
     public ServerConfig() {
         this.heightWorlds = new HashMap<>();
         this.heightWorlds.put("overworld", 256);
@@ -56,18 +52,6 @@ public class ServerConfig {
         return this.blacklistWorldList;
     }
 
-    public int getRtpPermissionLevel() {
-        return this.rtpPermissionLevel;
-    }
-
-    public int getRtpDimensionPermissionLevel() {
-        return this.rtpDimensionPermissionLevel;
-    }
-
-    public int getRtpCooldownPermissionLevel() {
-        return this.rtpCooldownPermissionLevel;
-    }
-
     private void write() {
         UtilGson.writeFileAsync("/config/ExtraRTP/", "config.json", UtilGson.newGson().toJson(this)).join();
     }
@@ -84,9 +68,6 @@ public class ServerConfig {
                 this.blacklistWorldList = config.getBlacklistWorldList();
                 this.heightWorlds = config.getHeightWorlds();
                 this.cooldownSecondTeleport = config.getCooldownSecondTeleport();
-                this.rtpPermissionLevel = config.getRtpPermissionLevel();
-                this.rtpDimensionPermissionLevel = config.getRtpDimensionPermissionLevel();
-                this.rtpCooldownPermissionLevel = config.getRtpCooldownPermissionLevel();
             });
             if (!future.join()) {
                 write();

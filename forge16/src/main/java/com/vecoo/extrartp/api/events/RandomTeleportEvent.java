@@ -2,8 +2,10 @@ package com.vecoo.extrartp.api.events;
 
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
+@Cancelable
 public class RandomTeleportEvent extends Event {
     private final ServerPlayerEntity player;
     private ServerWorld world;
@@ -73,5 +75,12 @@ public class RandomTeleportEvent extends Event {
 
     public void setXRot(float xRot) {
         this.xRot = xRot;
+    }
+
+    @Cancelable
+    public static class Successful extends RandomTeleportEvent {
+        public Successful(ServerPlayerEntity player, ServerWorld world, double x, double y, double z, float yRot, float xRot) {
+            super(player, world, x, y, z, yRot, xRot);
+        }
     }
 }
