@@ -13,6 +13,7 @@ public class ServerConfig {
     private int countAttemptsTeleport = 5;
     private int cooldownSecondTeleport = 60;
     private boolean throughLeaves = true;
+    private boolean firstJoinRTP = false;
     private boolean blacklistWorld = false;
     private List<String> blacklistWorldList = Arrays.asList("the_nether", "the_end");
     private HashMap<String, Integer> heightWorlds;
@@ -38,6 +39,10 @@ public class ServerConfig {
 
     public boolean isBlacklistWorld() {
         return this.blacklistWorld;
+    }
+
+    public boolean isFirstJoinRTP() {
+        return this.firstJoinRTP;
     }
 
     public int getCooldownSecondTeleport() {
@@ -68,6 +73,7 @@ public class ServerConfig {
                 this.blacklistWorldList = config.getBlacklistWorldList();
                 this.heightWorlds = config.getHeightWorlds();
                 this.cooldownSecondTeleport = config.getCooldownSecondTeleport();
+                this.firstJoinRTP = config.isFirstJoinRTP();
             });
             if (!future.join()) {
                 write();

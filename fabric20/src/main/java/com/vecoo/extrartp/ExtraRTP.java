@@ -3,9 +3,11 @@ package com.vecoo.extrartp;
 import com.vecoo.extrartp.command.RandomTeleportCommand;
 import com.vecoo.extrartp.config.LocaleConfig;
 import com.vecoo.extrartp.config.ServerConfig;
+import com.vecoo.extrartp.listener.PlayerJoinListener;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.MinecraftServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,6 +31,7 @@ public class ExtraRTP implements ModInitializer {
 
         CommandRegistrationCallback.EVENT.register(RandomTeleportCommand::register);
         ServerLifecycleEvents.SERVER_STARTING.register(server -> this.server = server);
+        ServerPlayConnectionEvents.JOIN.register(PlayerJoinListener::onPlayerJoin);
     }
 
     public void loadConfig() {

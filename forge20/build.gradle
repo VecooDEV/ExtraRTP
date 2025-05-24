@@ -18,9 +18,9 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 repositories {}
 
 dependencies {
-    minecraft "net.minecraftforge:forge:1.20.1-${forge_version_20}"
+    minecraft "net.minecraftforge:forge:1.20.1-${forge_20}"
 
-    compileOnly fg.deobf("maven.modrinth:extralib:${extralib_version}-forge,1.20.1")
+    compileOnly fg.deobf("maven.modrinth:extralib:${extralib}-forge,1.20.1")
 }
 
 processResources {

@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.12-SNAPSHOT'
+    id 'fabric-loom' version '1.9.2'
     id "com.modrinth.minotaur" version "2.8.7"
 }
 
@@ -20,7 +20,7 @@ dependencies {
     modCompileOnly "net.fabricmc:fabric-loader:${fabric_loader_19}"
     modCompileOnly "net.fabricmc.fabric-api:fabric-api:${fabric_api_19}"
 
-    modApi "maven.modrinth:extralib:${extralib_version}-fabric,1.19.2"
+    modApi "maven.modrinth:extralib:${extralib}-fabric,1.19.2"
 }
 
 processResources {
