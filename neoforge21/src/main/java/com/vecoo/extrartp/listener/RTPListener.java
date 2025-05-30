@@ -16,7 +16,7 @@ public class RTPListener {
         ServerPlayer player = (ServerPlayer) event.getEntity();
 
         if (!UsernameCache.containsUUID(player.getUUID()) && ExtraRTP.getInstance().getConfig().isFirstJoinRTP()) {
-            ServerLevel world = UtilWorld.getWorldByName(ExtraRTP.getInstance().getConfig().getDefaultWorld(), ExtraRTP.getInstance().getServer());
+            ServerLevel world = UtilWorld.getWorldByName(ExtraRTP.getInstance().getConfig().getDefaultWorld());
 
             if (world == null) {
                 player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getNotDimensionFound()

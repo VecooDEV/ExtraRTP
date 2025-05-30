@@ -47,7 +47,7 @@ public class RandomTeleportCommand {
         ServerConfig config = ExtraRTP.getInstance().getConfig();
         LocaleConfig localeConfig = ExtraRTP.getInstance().getLocale();
 
-        ServerLevel level = UtilWorld.getWorldByName(config.getDefaultWorld(), ExtraRTP.getInstance().getServer());
+        ServerLevel level = UtilWorld.getWorldByName(config.getDefaultWorld());
 
         if (level == null) {
             player.sendSystemMessage(UtilChat.formatMessage(localeConfig.getNotDimensionFound()
@@ -73,7 +73,7 @@ public class RandomTeleportCommand {
     }
 
     private static int executeRTPDimension(ServerPlayer player, String dimension) {
-        ServerLevel level = UtilWorld.getWorldByName(dimension, ExtraRTP.getInstance().getServer());
+        ServerLevel level = UtilWorld.getWorldByName(dimension);
 
         LocaleConfig localeConfig = ExtraRTP.getInstance().getLocale();
 
@@ -109,7 +109,7 @@ public class RandomTeleportCommand {
     }
 
     private static int executeRTPDimensionPlayer(CommandSourceStack source, String dimension, ServerPlayer player) {
-        ServerLevel world = UtilWorld.getWorldByName(dimension, ExtraRTP.getInstance().getServer());
+        ServerLevel world = UtilWorld.getWorldByName(dimension);
 
         LocaleConfig localeConfig = ExtraRTP.getInstance().getLocale();
 

@@ -20,7 +20,7 @@ public class PlayerJoinListener {
         }
 
         if (player.getStats().getValue(Stats.CUSTOM.get(Stats.LEAVE_GAME)) == 0) {
-            ServerLevel world = UtilWorld.getWorldByName(ExtraRTP.getInstance().getConfig().getDefaultWorld(), ExtraRTP.getInstance().getServer());
+            ServerLevel world = UtilWorld.getLevelByName(ExtraRTP.getInstance().getConfig().getDefaultWorld());
 
             if (world == null) {
                 player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getNotDimensionFound()

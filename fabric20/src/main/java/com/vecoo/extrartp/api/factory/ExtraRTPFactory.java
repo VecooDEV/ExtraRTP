@@ -28,9 +28,9 @@ public class ExtraRTPFactory {
             Random random = ThreadLocalRandom.current();
             WorldBorder worldBorder = level.getWorldBorder();
 
-            int minX = (int) worldBorder.getMinX();
+            double minX = worldBorder.getMinX();
             int y = Utils.heightStart(level.dimension().location().getPath());
-            int minZ = (int) worldBorder.getMinZ();
+            double minZ = worldBorder.getMinZ();
 
             for (int attempt = 0; attempt < config.getCountAttemptsTeleport(); attempt++) {
                 BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos(random.nextInt((int) (worldBorder.getMaxX() - minX)) + minX, y, random.nextInt((int) (worldBorder.getMaxZ() - minZ)) + minZ);

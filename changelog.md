@@ -1,3 +1,3 @@
-* Port 1.21.1 Fabric.
-* Added first join RTP (Fabric).
-* Minor improvements.
+* Unsupported Fabric: 1.16.5/1.19.2.
+* Minor optimization.
+* Minor improvements and fixes.
