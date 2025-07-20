@@ -57,16 +57,15 @@ public class RandomTeleportCommand {
             return 0;
         }
 
-        ExtraRTPFactory.randomTeleport(world, player).thenAccept(success -> {
-            if (!success) {
-                player.sendMessage(UtilChat.formatMessage(localeConfig.getFailedTeleport()), Util.NIL_UUID);
-            } else {
-                Utils.cooldown.put(player.getUUID(), System.currentTimeMillis());
+        if (ExtraRTPFactory.randomTeleport(world, player)) {
+            Utils.COOLDOWN.put(player.getUUID(), System.currentTimeMillis());
 
-                player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getSuccessfulTeleport()
-                        .replace("%dimension%", ExtraRTP.getInstance().getConfig().getDefaultWorld())), Util.NIL_UUID);
-            }
-        });
+            player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getSuccessfulTeleport()
+                    .replace("%dimension%", ExtraRTP.getInstance().getConfig().getDefaultWorld())), Util.NIL_UUID);
+        } else {
+            player.sendMessage(UtilChat.formatMessage(localeConfig.getFailedTeleport()), Util.NIL_UUID);
+        }
+
         return 1;
     }
 
@@ -84,7 +83,7 @@ public class RandomTeleportCommand {
 
         if (config.isBlacklistWorld() && config.getBlacklistWorldList().contains(dimension.toLowerCase())) {
             player.sendMessage(UtilChat.formatMessage(localeConfig.getDimensionBlacklist()
-                    .replace("%dimension%", dimension.toLowerCase())), Util.NIL_UUID);
+                    .replace("%dimension%", dimension)), Util.NIL_UUID);
             return 0;
         }
 
@@ -92,16 +91,15 @@ public class RandomTeleportCommand {
             return 0;
         }
 
-        ExtraRTPFactory.randomTeleport(world, player).thenAccept(success -> {
-            if (!success) {
-                player.sendMessage(UtilChat.formatMessage(localeConfig.getFailedTeleport()), Util.NIL_UUID);
-            } else {
-                Utils.cooldown.put(player.getUUID(), System.currentTimeMillis());
+        if (ExtraRTPFactory.randomTeleport(world, player)) {
+            Utils.COOLDOWN.put(player.getUUID(), System.currentTimeMillis());
 
-                player.sendMessage(UtilChat.formatMessage(localeConfig.getSuccessfulTeleport()
-                        .replace("%dimension%", dimension)), Util.NIL_UUID);
-            }
-        });
+            player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getSuccessfulTeleport()
+                    .replace("%dimension%", dimension)), Util.NIL_UUID);
+        } else {
+            player.sendMessage(UtilChat.formatMessage(localeConfig.getFailedTeleport()), Util.NIL_UUID);
+        }
+
         return 1;
     }
 
@@ -115,15 +113,19 @@ public class RandomTeleportCommand {
             return 0;
         }
 
-        ExtraRTPFactory.randomTeleport(world, player).thenAccept(success -> {
-            if (!success) {
-                player.sendMessage(UtilChat.formatMessage(localeConfig.getFailedTeleport()), Util.NIL_UUID);
-            } else {
-                source.sendSuccess(UtilChat.formatMessage(localeConfig.getSuccessfulTeleportPlayer()
-                        .replace("%dimension%", dimension.toLowerCase())
-                        .replace("%player%", player.getName().getString())), false);
-            }
-        });
+        if (ExtraRTPFactory.randomTeleport(world, player)) {
+            Utils.COOLDOWN.put(player.getUUID(), System.currentTimeMillis());
+
+            player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getSuccessfulTeleport()
+                    .replace("%dimension%", dimension)), Util.NIL_UUID);
+            source.sendSuccess(UtilChat.formatMessage(localeConfig.getSuccessfulTeleportPlayer()
+                    .replace("%dimension%", dimension)
+                    .replace("%player%", player.getName().getString())), false);
+        } else {
+            player.sendMessage(UtilChat.formatMessage(localeConfig.getFailedTeleport()), Util.NIL_UUID);
+            source.sendSuccess(UtilChat.formatMessage(localeConfig.getFailedTeleport()), false);
+        }
+
         return 1;
     }
 

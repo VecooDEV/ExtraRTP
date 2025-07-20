@@ -7,63 +7,75 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.border.WorldBorder;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.Random;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ExtraRTPFactory {
-    public static CompletableFuture<Boolean> randomTeleport(ServerLevel level, ServerPlayer player) {
-        if (level == null || player == null) {
-            return CompletableFuture.completedFuture(false);
+    public static boolean randomTeleport(ServerLevel level, ServerPlayer player) {
+        ServerConfig config = ExtraRTP.getInstance().getConfig();
+        RandomSource random = level.getRandom();
+        WorldBorder worldBorder = level.getWorldBorder();
+
+        double minX = worldBorder.getMinX();
+        double maxX = worldBorder.getMaxX();
+        double minZ = worldBorder.getMinZ();
+        double maxZ = worldBorder.getMaxZ();
+        int y = Utils.heightStart(level.dimension().location().getPath());
+
+        double deltaX = maxX - minX;
+        double deltaZ = maxZ - minZ;
+
+        AtomicBoolean teleportSuccess = new AtomicBoolean(false);
+
+        for (int attempt = 0; attempt < config.getCountAttemptsTeleport() && !teleportSuccess.get(); attempt++) {
+            BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos(random.nextInt((int) deltaX) + (int) minX, y, random.nextInt((int) deltaZ) + (int) minZ);
+            ChunkAccess chunk = level.getChunkSource().getChunk(blockPos.getX() >> 4, blockPos.getZ() >> 4, ChunkStatus.FEATURES, true);
+
+            if (chunk != null) {
+                findPosition(blockPos, chunk).thenAccept(success -> {
+                    if (success && teleportSuccess.compareAndSet(false, true)) {
+                        ExtraRTP.getInstance().getServer().execute(() -> {
+                            player.teleportTo(level, blockPos.getX() + 0.5, blockPos.getY() + 1.0, blockPos.getZ() + 0.5, player.getYRot(), player.getXRot());
+                            player.setDeltaMovement(Vec3.ZERO);
+                        });
+                    }
+                });
+            }
         }
 
+        return teleportSuccess.get();
+    }
+
+    private static CompletableFuture<Boolean> findPosition(BlockPos.MutableBlockPos blockPos, ChunkAccess chunk) {
         return CompletableFuture.supplyAsync(() -> {
-            ServerConfig config = ExtraRTP.getInstance().getConfig();
-            Random random = ThreadLocalRandom.current();
-            WorldBorder worldBorder = level.getWorldBorder();
+            BlockState blockState;
 
-            double minX = worldBorder.getMinX();
-            int y = Utils.heightStart(level.dimension().location().getPath());
-            double minZ = worldBorder.getMinZ();
+            while (blockPos.getY() > 0) {
+                blockState = chunk.getBlockState(blockPos);
 
-            for (int attempt = 0; attempt < config.getCountAttemptsTeleport(); attempt++) {
-                BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos(random.nextInt((int) (worldBorder.getMaxX() - minX)) + minX, y, random.nextInt((int) (worldBorder.getMaxZ() - minZ)) + minZ);
-
-                while (blockPos.getY() > 0) {
-                    Block block = level.getBlockState(blockPos).getBlock();
-
-                    if (block.defaultBlockState().isAir() || block.defaultBlockState().is(BlockTags.LEAVES) && config.isThroughLeaves() || !block.defaultBlockState().isCollisionShapeFullBlock(level, blockPos)) {
-                        blockPos.move(Direction.DOWN);
-                        continue;
-                    }
-
-                    Block checkBlock = level.getBlockState(blockPos.above()).getBlock();
-
-                    if (checkBlock.defaultBlockState().is(Blocks.WATER) || checkBlock.defaultBlockState().is(Blocks.LAVA)) {
-                        break;
-                    }
-
-                    if (!checkBlock.defaultBlockState().isAir() || !level.getBlockState(blockPos.above(2)).getBlock().defaultBlockState().isAir()) {
-                        break;
-                    }
-
-                    ExtraRTP.getInstance().getServer().execute(() -> {
-                        player.teleportTo(level, blockPos.getX() + 0.5, blockPos.getY() + 1.0, blockPos.getZ() + 0.5, player.getYRot(), player.getXRot());
-                        player.setDeltaMovement(Vec3.ZERO);
-                    });
-
-                    return true;
+                if (blockState.isAir()) {
+                    blockPos.move(Direction.DOWN);
+                    continue;
                 }
+
+                if (!blockState.getFluidState().isEmpty()) {
+                    return false;
+                }
+
+                if (!blockState.isCollisionShapeFullBlock(chunk, blockPos)) {
+                    blockPos.move(Direction.DOWN);
+                }
+
+                return true;
             }
-            return false;
-        }).exceptionally(e -> {
-            ExtraRTP.getLogger().error("[ExtraRTP] Error", e);
+
             return false;
         });
     }

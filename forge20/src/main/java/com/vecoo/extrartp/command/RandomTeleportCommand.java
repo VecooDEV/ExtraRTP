@@ -59,16 +59,15 @@ public class RandomTeleportCommand {
             return 0;
         }
 
-        ExtraRTPFactory.randomTeleport(level, player).thenAccept(success -> {
-            if (!success) {
-                player.sendSystemMessage(UtilChat.formatMessage(localeConfig.getFailedTeleport()));
-            } else {
-                Utils.cooldown.put(player.getUUID(), System.currentTimeMillis());
+        if (ExtraRTPFactory.randomTeleport(level, player)) {
+            Utils.COOLDOWN.put(player.getUUID(), System.currentTimeMillis());
 
-                player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getSuccessfulTeleport()
-                        .replace("%dimension%", ExtraRTP.getInstance().getConfig().getDefaultWorld())));
-            }
-        });
+            player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getSuccessfulTeleport()
+                    .replace("%dimension%", ExtraRTP.getInstance().getConfig().getDefaultWorld())));
+        } else {
+            player.sendSystemMessage(UtilChat.formatMessage(localeConfig.getFailedTeleport()));
+        }
+
         return 1;
     }
 
@@ -87,7 +86,7 @@ public class RandomTeleportCommand {
 
         if (config.isBlacklistWorld() && config.getBlacklistWorldList().contains(dimension.toLowerCase())) {
             player.sendSystemMessage(UtilChat.formatMessage(localeConfig.getDimensionBlacklist()
-                    .replace("%dimension%", dimension.toLowerCase())));
+                    .replace("%dimension%", dimension)));
             return 0;
         }
 
@@ -95,16 +94,15 @@ public class RandomTeleportCommand {
             return 0;
         }
 
-        ExtraRTPFactory.randomTeleport(level, player).thenAccept(success -> {
-            if (!success) {
-                player.sendSystemMessage(UtilChat.formatMessage(localeConfig.getFailedTeleport()));
-            } else {
-                Utils.cooldown.put(player.getUUID(), System.currentTimeMillis());
+        if (ExtraRTPFactory.randomTeleport(level, player)) {
+            Utils.COOLDOWN.put(player.getUUID(), System.currentTimeMillis());
 
-                player.sendSystemMessage(UtilChat.formatMessage(localeConfig.getSuccessfulTeleport()
-                        .replace("%dimension%", dimension)));
-            }
-        });
+            player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getSuccessfulTeleport()
+                    .replace("%dimension%", dimension)));
+        } else {
+            player.sendSystemMessage(UtilChat.formatMessage(localeConfig.getFailedTeleport()));
+        }
+
         return 1;
     }
 
@@ -119,15 +117,19 @@ public class RandomTeleportCommand {
             return 0;
         }
 
-        ExtraRTPFactory.randomTeleport(world, player).thenAccept(success -> {
-            if (!success) {
-                player.sendSystemMessage(UtilChat.formatMessage(localeConfig.getFailedTeleport()));
-            } else {
-                source.sendSystemMessage(UtilChat.formatMessage(localeConfig.getSuccessfulTeleportPlayer()
-                        .replace("%dimension%", dimension.toLowerCase())
-                        .replace("%player%", player.getGameProfile().getName())));
-            }
-        });
+        if (ExtraRTPFactory.randomTeleport(world, player)) {
+            Utils.COOLDOWN.put(player.getUUID(), System.currentTimeMillis());
+
+            player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getSuccessfulTeleport()
+                    .replace("%dimension%", dimension)));
+            source.sendSystemMessage(UtilChat.formatMessage(localeConfig.getSuccessfulTeleportPlayer()
+                    .replace("%dimension%", dimension)
+                    .replace("%player%", player.getName().getString())));
+        } else {
+            player.sendSystemMessage(UtilChat.formatMessage(localeConfig.getFailedTeleport()));
+            source.sendSystemMessage(UtilChat.formatMessage(localeConfig.getFailedTeleport()));
+        }
+
         return 1;
     }
 

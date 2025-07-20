@@ -12,7 +12,6 @@ public class ServerConfig {
     private String defaultWorld = "overworld";
     private int countAttemptsTeleport = 5;
     private int cooldownSecondTeleport = 60;
-    private boolean throughLeaves = true;
     private boolean firstJoinRTP = false;
     private boolean blacklistWorld = false;
     private List<String> blacklistWorldList = Arrays.asList("the_nether", "the_end");
@@ -31,10 +30,6 @@ public class ServerConfig {
 
     public int getCountAttemptsTeleport() {
         return this.countAttemptsTeleport;
-    }
-
-    public boolean isThroughLeaves() {
-        return this.throughLeaves;
     }
 
     public boolean isFirstJoinRTP() {
@@ -68,7 +63,6 @@ public class ServerConfig {
 
                 this.defaultWorld = config.getDefaultWorld();
                 this.countAttemptsTeleport = config.getCountAttemptsTeleport();
-                this.throughLeaves = config.isThroughLeaves();
                 this.blacklistWorld = config.isBlacklistWorld();
                 this.blacklistWorldList = config.getBlacklistWorldList();
                 this.heightWorlds = config.getHeightWorlds();

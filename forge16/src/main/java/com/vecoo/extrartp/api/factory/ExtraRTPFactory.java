@@ -4,74 +4,82 @@ import com.vecoo.extrartp.ExtraRTP;
 import com.vecoo.extrartp.api.events.RandomTeleportEvent;
 import com.vecoo.extrartp.config.ServerConfig;
 import com.vecoo.extrartp.util.Utils;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.border.WorldBorder;
+import net.minecraft.world.chunk.ChunkStatus;
+import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.common.MinecraftForge;
 
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ExtraRTPFactory {
-    public static CompletableFuture<Boolean> randomTeleport(ServerWorld world, ServerPlayerEntity player) {
-        if (world == null || player == null) {
-            return CompletableFuture.completedFuture(false);
+    public static boolean randomTeleport(ServerWorld world, ServerPlayerEntity player) {
+        ServerConfig config = ExtraRTP.getInstance().getConfig();
+        Random random = world.random;
+        WorldBorder worldBorder = world.getWorldBorder();
+
+        double minX = worldBorder.getMinX();
+        double maxX = worldBorder.getMaxX();
+        double minZ = worldBorder.getMinZ();
+        double maxZ = worldBorder.getMaxZ();
+        int y = Utils.heightStart(world.dimension().location().getPath());
+
+        double deltaX = maxX - minX;
+        double deltaZ = maxZ - minZ;
+
+        AtomicBoolean teleportSuccess = new AtomicBoolean(false);
+
+        for (int attempt = 0; attempt < config.getCountAttemptsTeleport() && !teleportSuccess.get(); attempt++) {
+            BlockPos.Mutable blockPos = new BlockPos.Mutable(random.nextInt((int) deltaX) + (int) minX, y, random.nextInt((int) deltaZ) + (int) minZ);
+            IChunk chunk = world.getChunkSource().getChunk(blockPos.getX() >> 4, blockPos.getZ() >> 4, ChunkStatus.FEATURES, true);
+
+            if (chunk != null) {
+                findPosition(blockPos, chunk).thenAccept(success -> {
+                    if (success && teleportSuccess.compareAndSet(false, true)) {
+                        ExtraRTP.getInstance().getServer().execute(() -> {
+                            RandomTeleportEvent.Successful event = new RandomTeleportEvent.Successful(player, world, blockPos.getX() + 0.5, blockPos.getY() + 1.0, blockPos.getZ() + 0.5, player.yRot, player.xRot);
+
+                            player.teleportTo(event.getWorld(), event.getX(), event.getY(), event.getZ(), event.getYRot(), event.getXRot());
+                            player.setDeltaMovement(Vector3d.ZERO);
+                        });
+                    }
+                });
+            }
         }
 
+        return teleportSuccess.get();
+    }
+
+    private static CompletableFuture<Boolean> findPosition(BlockPos.Mutable blockPos, IChunk chunk) {
         return CompletableFuture.supplyAsync(() -> {
-            ServerConfig config = ExtraRTP.getInstance().getConfig();
-            Random random = ThreadLocalRandom.current();
-            WorldBorder worldBorder = world.getWorldBorder();
+            BlockState blockState;
 
-            double minX = worldBorder.getMinX();
-            int y = Utils.heightStart(world.dimension().location().getPath());
-            double minZ = worldBorder.getMinZ();
+            while (blockPos.getY() > 0) {
+                blockState = chunk.getBlockState(blockPos);
 
-            for (int attempt = 0; attempt < config.getCountAttemptsTeleport(); attempt++) {
-                BlockPos.Mutable blockPos = new BlockPos.Mutable(random.nextInt((int) (worldBorder.getMaxX() - minX)) + minX, y, random.nextInt((int) (worldBorder.getMaxZ() - minZ)) + minZ);
-
-                while (blockPos.getY() > 0) {
-                    Block block = world.getBlockState(blockPos).getBlock();
-
-                    if (block.isAir(world.getBlockState(blockPos), world, blockPos) || block.is(BlockTags.LEAVES) && config.isThroughLeaves() || !block.defaultBlockState().isCollisionShapeFullBlock(world, blockPos)) {
-                        blockPos.move(Direction.DOWN);
-                        continue;
-                    }
-
-                    Block checkBlock = world.getBlockState(blockPos.above()).getBlock();
-
-                    if (checkBlock.is(Blocks.WATER) || checkBlock.is(Blocks.LAVA)) {
-                        break;
-                    }
-
-                    if (!checkBlock.is(Blocks.AIR) || !world.getBlockState(blockPos.above(2)).getBlock().is(Blocks.AIR)) {
-                        break;
-                    }
-
-                    ExtraRTP.getInstance().getServer().execute(() -> {
-                        RandomTeleportEvent.Successful event = new RandomTeleportEvent.Successful(player, world, blockPos.getX() + 0.5, blockPos.getY() + 1.0, blockPos.getZ() + 0.5, player.yRot, player.xRot);
-
-                        if (MinecraftForge.EVENT_BUS.post(event)) {
-                            return;
-                        }
-
-                        player.teleportTo(event.getWorld(), event.getX(), event.getY(), event.getZ(), event.getYRot(), event.getXRot());
-                        player.setDeltaMovement(Vector3d.ZERO);
-                    });
-
-                    return true;
+                if (blockState.getMaterial() == Material.AIR) {
+                    blockPos.move(Direction.DOWN);
+                    continue;
                 }
+
+                if (!blockState.getFluidState().isEmpty()) {
+                    return false;
+                }
+
+                if (!blockState.isCollisionShapeFullBlock(chunk, blockPos)) {
+                    blockPos.move(Direction.DOWN);
+                }
+
+                return true;
             }
-            return false;
-        }).exceptionally(e -> {
-            ExtraRTP.getLogger().error("[ExtraRTP] Error", e);
+
             return false;
         });
     }

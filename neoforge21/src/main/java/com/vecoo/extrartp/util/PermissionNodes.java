@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PermissionNodes {
-    public static List<PermissionNode<?>> permissionList = new ArrayList<>();
+    public static List<PermissionNode<?>> PERMISSION_LIST = new ArrayList<>();
 
     public static PermissionNode<Boolean> RANDOMTELEPORT_COMMAND = new PermissionNode<>(
             "minecraft",

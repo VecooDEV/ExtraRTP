@@ -24,14 +24,12 @@ public class RTPListener {
                 return;
             }
 
-            ExtraRTPFactory.randomTeleport(world, player).thenAccept(success -> {
-                if (!success) {
-                    player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getFailedTeleport()));
-                } else {
-                    player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getSuccessfulTeleport()
-                            .replace("%dimension%", ExtraRTP.getInstance().getConfig().getDefaultWorld())));
-                }
-            });
+            if (ExtraRTPFactory.randomTeleport(world, player)) {
+                player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getSuccessfulTeleport()
+                        .replace("%dimension%", ExtraRTP.getInstance().getConfig().getDefaultWorld())));
+            } else {
+                player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getFailedTeleport()));
+            }
         }
     }
 }

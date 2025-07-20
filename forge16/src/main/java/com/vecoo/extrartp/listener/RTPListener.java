@@ -25,14 +25,12 @@ public class RTPListener {
                 return;
             }
 
-            ExtraRTPFactory.randomTeleport(world, player).thenAccept(success -> {
-                if (!success) {
-                    player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getFailedTeleport()), Util.NIL_UUID);
-                } else {
-                    player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getSuccessfulTeleport()
-                            .replace("%dimension%", ExtraRTP.getInstance().getConfig().getDefaultWorld())), Util.NIL_UUID);
-                }
-            });
+            if (ExtraRTPFactory.randomTeleport(world, player)) {
+                player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getSuccessfulTeleport()
+                        .replace("%dimension%", ExtraRTP.getInstance().getConfig().getDefaultWorld())), Util.NIL_UUID);
+            } else {
+                player.sendMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getFailedTeleport()), Util.NIL_UUID);
+            }
         }
     }
 }
