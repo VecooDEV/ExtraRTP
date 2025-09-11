@@ -27,7 +27,7 @@ public class ExtraRTP implements ModInitializer {
     public void onInitialize() {
         instance = this;
 
-        this.loadConfig();
+        loadConfig();
 
         CommandRegistrationCallback.EVENT.register(RandomTeleportCommand::register);
         ServerLifecycleEvents.SERVER_STARTING.register(server -> this.server = server);

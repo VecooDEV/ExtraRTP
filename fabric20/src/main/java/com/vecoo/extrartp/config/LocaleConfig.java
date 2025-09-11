@@ -1,9 +1,6 @@
 package com.vecoo.extrartp.config;
 
 import com.vecoo.extralib.gson.UtilGson;
-import com.vecoo.extrartp.ExtraRTP;
-
-import java.util.concurrent.CompletableFuture;
 
 public class LocaleConfig {
     private String configReload = "&e(!) Configs reloaded.";
@@ -48,23 +45,19 @@ public class LocaleConfig {
     }
 
     public void init() {
-        try {
-            CompletableFuture<Boolean> future = UtilGson.readFileAsync("/config/ExtraRTP/", "locale.json", el -> {
-                LocaleConfig config = UtilGson.newGson().fromJson(el, LocaleConfig.class);
+        boolean completed = UtilGson.readFileAsync("/config/ExtraRTP/", "locale.json", el -> {
+            LocaleConfig config = UtilGson.newGson().fromJson(el, LocaleConfig.class);
 
-                this.configReload = config.getConfigReload();
-                this.successfulTeleport = config.getSuccessfulTeleport();
-                this.cooldownTeleport = config.getCooldownTeleport();
-                this.notDimensionFound = config.getNotDimensionFound();
-                this.failedTeleport = config.getFailedTeleport();
-                this.dimensionBlacklist = config.getDimensionBlacklist();
-                this.successfulTeleportPlayer = config.getSuccessfulTeleportPlayer();
-            });
-            if (!future.join()) {
-                write();
-            }
-        } catch (Exception e) {
-            ExtraRTP.getLogger().error("[ExtraRTP] Error in locale config.", e);
+            this.configReload = config.getConfigReload();
+            this.successfulTeleport = config.getSuccessfulTeleport();
+            this.cooldownTeleport = config.getCooldownTeleport();
+            this.notDimensionFound = config.getNotDimensionFound();
+            this.failedTeleport = config.getFailedTeleport();
+            this.dimensionBlacklist = config.getDimensionBlacklist();
+            this.successfulTeleportPlayer = config.getSuccessfulTeleportPlayer();
+        }).join();
+
+        if (!completed) {
             write();
         }
     }

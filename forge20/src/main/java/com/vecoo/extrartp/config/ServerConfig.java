@@ -1,12 +1,10 @@
 package com.vecoo.extrartp.config;
 
+import com.google.common.collect.Sets;
 import com.vecoo.extralib.gson.UtilGson;
-import com.vecoo.extrartp.ExtraRTP;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import java.util.Set;
 
 public class ServerConfig {
     private String defaultWorld = "overworld";
@@ -14,16 +12,15 @@ public class ServerConfig {
     private int cooldownSecondTeleport = 60;
     private boolean firstJoinRTP = false;
     private boolean blacklistWorld = false;
-    private List<String> blacklistWorldList = Arrays.asList("the_nether", "the_end");
+    private Set<String> blacklistWorldList = Sets.newHashSet("the_nether", "the_end");
     private HashMap<String, Integer> heightWorlds;
 
     public ServerConfig() {
         this.heightWorlds = new HashMap<>();
-        this.heightWorlds.put("overworld", 319);
+        this.heightWorlds.put("overworld", 256);
         this.heightWorlds.put("the_nether", 120);
-        this.heightWorlds.put("the_end", 319);
+        this.heightWorlds.put("the_end", 256);
     }
-
 
     public String getDefaultWorld() {
         return this.defaultWorld;
@@ -33,12 +30,12 @@ public class ServerConfig {
         return this.countAttemptsTeleport;
     }
 
-    public boolean isBlacklistWorld() {
-        return this.blacklistWorld;
-    }
-
     public boolean isFirstJoinRTP() {
         return this.firstJoinRTP;
+    }
+
+    public boolean isBlacklistWorld() {
+        return this.blacklistWorld;
     }
 
     public int getCooldownSecondTeleport() {
@@ -49,7 +46,7 @@ public class ServerConfig {
         return this.heightWorlds;
     }
 
-    public List<String> getBlacklistWorldList() {
+    public Set<String> getBlacklistWorldList() {
         return this.blacklistWorldList;
     }
 
@@ -58,23 +55,19 @@ public class ServerConfig {
     }
 
     public void init() {
-        try {
-            CompletableFuture<Boolean> future = UtilGson.readFileAsync("/config/ExtraRTP/", "config.json", el -> {
-                ServerConfig config = UtilGson.newGson().fromJson(el, ServerConfig.class);
+        boolean completed = UtilGson.readFileAsync("/config/ExtraRTP/", "config.json", el -> {
+            ServerConfig config = UtilGson.newGson().fromJson(el, ServerConfig.class);
 
-                this.defaultWorld = config.getDefaultWorld();
-                this.countAttemptsTeleport = config.getCountAttemptsTeleport();
-                this.blacklistWorld = config.isBlacklistWorld();
-                this.blacklistWorldList = config.getBlacklistWorldList();
-                this.heightWorlds = config.getHeightWorlds();
-                this.cooldownSecondTeleport = config.getCooldownSecondTeleport();
-                this.firstJoinRTP = config.isFirstJoinRTP();
-            });
-            if (!future.join()) {
-                write();
-            }
-        } catch (Exception e) {
-            ExtraRTP.getLogger().error("[ExtraRTP] Error in config.", e);
+            this.defaultWorld = config.getDefaultWorld();
+            this.countAttemptsTeleport = config.getCountAttemptsTeleport();
+            this.blacklistWorld = config.isBlacklistWorld();
+            this.blacklistWorldList = config.getBlacklistWorldList();
+            this.heightWorlds = config.getHeightWorlds();
+            this.cooldownSecondTeleport = config.getCooldownSecondTeleport();
+            this.firstJoinRTP = config.isFirstJoinRTP();
+        }).join();
+
+        if (!completed) {
             write();
         }
     }

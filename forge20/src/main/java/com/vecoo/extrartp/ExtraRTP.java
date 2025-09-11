@@ -31,7 +31,7 @@ public class ExtraRTP {
     public ExtraRTP() {
         instance = this;
 
-        this.loadConfig();
+        loadConfig();
 
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new RTPListener());

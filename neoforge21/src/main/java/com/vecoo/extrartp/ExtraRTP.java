@@ -31,7 +31,7 @@ public class ExtraRTP {
     public ExtraRTP() {
         instance = this;
 
-        this.loadConfig();
+        loadConfig();
 
         NeoForge.EVENT_BUS.register(this);
         NeoForge.EVENT_BUS.register(new RTPListener());

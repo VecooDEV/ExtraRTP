@@ -30,7 +30,7 @@ public class ExtraRTP {
     public ExtraRTP() {
         instance = this;
 
-        this.loadConfig();
+        loadConfig();
 
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new RTPListener());
@@ -45,11 +45,11 @@ public class ExtraRTP {
     public void onServerStarting(FMLServerStartingEvent event) {
         this.server = event.getServer();
 
-        PermissionAPI.registerNode("minecraft.command.rtp", DefaultPermissionLevel.OP, "/rtp");
-        PermissionAPI.registerNode("minecraft.command.rtp.dimension", DefaultPermissionLevel.OP, "/rtp <dimension>");
-        PermissionAPI.registerNode("minecraft.command.rtp.dimension.player", DefaultPermissionLevel.OP, "/rtp <dimension> <player>");
-        PermissionAPI.registerNode("minecraft.command.rtp.cooldown", DefaultPermissionLevel.OP, "Cooldown rtp command");
-        PermissionAPI.registerNode("minecraft.command.rtp.reload", DefaultPermissionLevel.OP, "/rtp reload");
+        PermissionAPI.registerNode("minecraft.command.rtp", DefaultPermissionLevel.OP, "");
+        PermissionAPI.registerNode("minecraft.command.rtp.dimension", DefaultPermissionLevel.OP, "");
+        PermissionAPI.registerNode("minecraft.command.rtp.dimension.player", DefaultPermissionLevel.OP, "");
+        PermissionAPI.registerNode("minecraft.command.rtp.cooldown", DefaultPermissionLevel.OP, "");
+        PermissionAPI.registerNode("minecraft.command.rtp.reload", DefaultPermissionLevel.OP, "");
     }
 
     public void loadConfig() {
