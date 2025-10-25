@@ -14,12 +14,13 @@ import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkStatus;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ExtraRTPFactory {
-    public static boolean randomTeleport(ServerLevel level, ServerPlayer player) {
+    public static boolean randomTeleport(@NotNull ServerLevel level, @NotNull ServerPlayer player) {
         ServerConfig config = ExtraRTP.getInstance().getConfig();
         RandomSource random = level.getRandom();
         WorldBorder worldBorder = level.getWorldBorder();
@@ -56,7 +57,7 @@ public class ExtraRTPFactory {
         return teleportSuccess.get();
     }
 
-    private static CompletableFuture<Boolean> findPosition(BlockPos.MutableBlockPos blockPos, ChunkAccess chunk) {
+    private static CompletableFuture<Boolean> findPosition(@NotNull BlockPos.MutableBlockPos blockPos, @NotNull ChunkAccess chunk) {
         return CompletableFuture.supplyAsync(() -> {
             BlockState blockState;
 

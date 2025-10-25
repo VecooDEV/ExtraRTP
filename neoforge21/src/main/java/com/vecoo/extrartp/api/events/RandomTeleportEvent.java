@@ -3,17 +3,15 @@ package com.vecoo.extrartp.api.events;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.Event;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class RandomTeleportEvent extends Event {
     private final ServerPlayer player;
     private ServerLevel level;
-    private double x;
-    private double y;
-    private double z;
-    private float yRot;
-    private float xRot;
+    private double x, y, z;
+    private float yRot, xRot;
 
-    public RandomTeleportEvent(ServerPlayer player, ServerLevel level, double x, double y, double z, float yRot, float xRot) {
+    public RandomTeleportEvent(@NotNull ServerPlayer player, @NotNull ServerLevel level, double x, double y, double z, float yRot, float xRot) {
         this.player = player;
         this.level = level;
         this.x = x;
@@ -23,10 +21,12 @@ public abstract class RandomTeleportEvent extends Event {
         this.xRot = xRot;
     }
 
+    @NotNull
     public ServerPlayer getPlayer() {
         return this.player;
     }
 
+    @NotNull
     public ServerLevel getLevel() {
         return this.level;
     }
@@ -51,7 +51,7 @@ public abstract class RandomTeleportEvent extends Event {
         return this.xRot;
     }
 
-    public void setLevel(ServerLevel level) {
+    public void setLevel(@NotNull ServerLevel level) {
         this.level = level;
     }
 
@@ -76,7 +76,7 @@ public abstract class RandomTeleportEvent extends Event {
     }
 
     public static class Successful extends RandomTeleportEvent {
-        public Successful(ServerPlayer player, ServerLevel level, double x, double y, double z, float yRot, float xRot) {
+        public Successful(@NotNull ServerPlayer player, @NotNull ServerLevel level, double x, double y, double z, float yRot, float xRot) {
             super(player, level, x, y, z, yRot, xRot);
         }
     }

@@ -1,20 +1,20 @@
 package com.vecoo.extrartp;
 
+import com.mojang.logging.LogUtils;
 import com.vecoo.extrartp.command.RandomTeleportCommand;
 import com.vecoo.extrartp.config.LocaleConfig;
 import com.vecoo.extrartp.config.ServerConfig;
-import com.vecoo.extrartp.listener.PlayerJoinListener;
+import com.vecoo.extrartp.listener.RTPListener;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.MinecraftServer;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 public class ExtraRTP implements ModInitializer {
     public static final String MOD_ID = "extrartp";
-    private static final Logger LOGGER = LogManager.getLogger("ExtraRTP");
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     private static ExtraRTP instance;
 
@@ -31,7 +31,7 @@ public class ExtraRTP implements ModInitializer {
 
         CommandRegistrationCallback.EVENT.register(RandomTeleportCommand::register);
         ServerLifecycleEvents.SERVER_STARTING.register(server -> this.server = server);
-        ServerPlayConnectionEvents.JOIN.register(PlayerJoinListener::onPlayerJoin);
+        ServerPlayConnectionEvents.JOIN.register(RTPListener::onPlayerJoin);
     }
 
     public void loadConfig() {
@@ -41,7 +41,7 @@ public class ExtraRTP implements ModInitializer {
             this.locale = new LocaleConfig();
             this.locale.init();
         } catch (Exception e) {
-            LOGGER.error("[ExtraRTP] Error load config.", e);
+            LOGGER.error("Error load config.", e);
         }
     }
 

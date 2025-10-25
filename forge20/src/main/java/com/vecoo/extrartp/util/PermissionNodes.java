@@ -1,41 +1,33 @@
 package com.vecoo.extrartp.util;
 
+import com.vecoo.extralib.permission.UtilPermission;
+import net.minecraftforge.server.permission.events.PermissionGatherEvent;
 import net.minecraftforge.server.permission.nodes.PermissionNode;
-import net.minecraftforge.server.permission.nodes.PermissionTypes;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class PermissionNodes {
-    public static List<PermissionNode<?>> PERMISSION_LIST = new ArrayList<>();
+    public static final Set<PermissionNode<?>> PERMISSION_LIST = new HashSet<>();
 
-    public static PermissionNode<Boolean> RANDOMTELEPORT_COMMAND = new PermissionNode<>(
-            "minecraft",
-            "command.rtp",
-            PermissionTypes.BOOLEAN,
-            (p, uuid, permissionDynamicContexts) -> false);
+    public static PermissionNode<Boolean> RANDOMTELEPORT_COMMAND = UtilPermission.getPermissionNode("minecraft.command.rtp");
+    public static PermissionNode<Boolean> RANDOMTELEPORT_COOLDOWN = UtilPermission.getPermissionNode("minecraft.command.rtp.cooldown");
+    public static PermissionNode<Boolean> RANDOMTELEPORT_RELOAD_COMMAND = UtilPermission.getPermissionNode("minecraft.command.rtp.reload");
+    public static PermissionNode<Boolean> RANDOMTELEPORT_DIMENSION_COMMAND = UtilPermission.getPermissionNode("minecraft.command.rtp.dimension");
+    public static PermissionNode<Boolean> RANDOMTELEPORT_DIMENSION_PLAYER_COMMAND = UtilPermission.getPermissionNode("minecraft.command.rtp.dimension.player");
 
-    public static PermissionNode<Boolean> RANDOMTELEPORT_COOLDOWN = new PermissionNode<>(
-            "minecraft",
-            "command.rtp.cooldown",
-            PermissionTypes.BOOLEAN,
-            (p, uuid, permissionDynamicContexts) -> false);
+    public static void registerPermission(@NotNull PermissionGatherEvent.Nodes event) {
+        PERMISSION_LIST.add(RANDOMTELEPORT_COMMAND);
+        PERMISSION_LIST.add(RANDOMTELEPORT_COOLDOWN);
+        PERMISSION_LIST.add(RANDOMTELEPORT_RELOAD_COMMAND);
+        PERMISSION_LIST.add(RANDOMTELEPORT_DIMENSION_COMMAND);
+        PERMISSION_LIST.add(RANDOMTELEPORT_DIMENSION_PLAYER_COMMAND);
 
-    public static PermissionNode<Boolean> RANDOMTELEPORT_RELOAD_COMMAND = new PermissionNode<>(
-            "minecraft",
-            "command.rtp.reload",
-            PermissionTypes.BOOLEAN,
-            (p, uuid, permissionDynamicContexts) -> false);
-
-    public static PermissionNode<Boolean> RANDOMTELEPORT_DIMENSION_COMMAND = new PermissionNode<>(
-            "minecraft",
-            "command.rtp.dimension",
-            PermissionTypes.BOOLEAN,
-            (p, uuid, permissionDynamicContexts) -> false);
-
-    public static PermissionNode<Boolean> RANDOMTELEPORT_DIMENSION_PLAYER_COMMAND = new PermissionNode<>(
-            "minecraft",
-            "command.rtp.dimension.player",
-            PermissionTypes.BOOLEAN,
-            (p, uuid, permissionDynamicContexts) -> false);
+        for (PermissionNode<?> node : PERMISSION_LIST) {
+            if (!event.getNodes().contains(node)) {
+                event.addNodes(node);
+            }
+        }
+    }
 }

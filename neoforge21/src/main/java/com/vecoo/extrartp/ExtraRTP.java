@@ -1,5 +1,6 @@
 package com.vecoo.extrartp;
 
+import com.mojang.logging.LogUtils;
 import com.vecoo.extrartp.command.RandomTeleportCommand;
 import com.vecoo.extrartp.config.LocaleConfig;
 import com.vecoo.extrartp.config.ServerConfig;
@@ -12,14 +13,12 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.server.permission.events.PermissionGatherEvent;
-import net.neoforged.neoforge.server.permission.nodes.PermissionNode;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
 
 @Mod(ExtraRTP.MOD_ID)
 public class ExtraRTP {
     public static final String MOD_ID = "extrartp";
-    private static final Logger LOGGER = LogManager.getLogger("ExtraRTP");
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     private static ExtraRTP instance;
 
@@ -39,17 +38,7 @@ public class ExtraRTP {
 
     @SubscribeEvent
     public void onPermissionGather(PermissionGatherEvent.Nodes event) {
-        PermissionNodes.PERMISSION_LIST.add(PermissionNodes.RANDOMTELEPORT_COMMAND);
-        PermissionNodes.PERMISSION_LIST.add(PermissionNodes.RANDOMTELEPORT_COOLDOWN);
-        PermissionNodes.PERMISSION_LIST.add(PermissionNodes.RANDOMTELEPORT_RELOAD_COMMAND);
-        PermissionNodes.PERMISSION_LIST.add(PermissionNodes.RANDOMTELEPORT_DIMENSION_COMMAND);
-        PermissionNodes.PERMISSION_LIST.add(PermissionNodes.RANDOMTELEPORT_DIMENSION_PLAYER_COMMAND);
-
-        for (PermissionNode<?> node : PermissionNodes.PERMISSION_LIST) {
-            if (!event.getNodes().contains(node)) {
-                event.addNodes(node);
-            }
-        }
+        PermissionNodes.registerPermission(event);
     }
 
     @SubscribeEvent
@@ -69,7 +58,7 @@ public class ExtraRTP {
             this.locale = new LocaleConfig();
             this.locale.init();
         } catch (Exception e) {
-            LOGGER.error("[ExtraRTP] Error load config.", e);
+            LOGGER.error("Error load config.", e);
         }
     }
 

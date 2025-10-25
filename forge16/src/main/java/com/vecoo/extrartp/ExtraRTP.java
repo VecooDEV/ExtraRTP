@@ -18,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 @Mod(ExtraRTP.MOD_ID)
 public class ExtraRTP {
     public static final String MOD_ID = "extrartp";
-    private static final Logger LOGGER = LogManager.getLogger("ExtraRTP");
+    private static final Logger LOGGER = LogManager.getLogger();
 
     private static ExtraRTP instance;
 
@@ -37,11 +37,6 @@ public class ExtraRTP {
     }
 
     @SubscribeEvent
-    public void onRegisterCommands(RegisterCommandsEvent event) {
-        RandomTeleportCommand.register(event.getDispatcher());
-    }
-
-    @SubscribeEvent
     public void onServerStarting(FMLServerStartingEvent event) {
         this.server = event.getServer();
 
@@ -52,6 +47,11 @@ public class ExtraRTP {
         PermissionAPI.registerNode("minecraft.command.rtp.reload", DefaultPermissionLevel.OP, "");
     }
 
+    @SubscribeEvent
+    public void onRegisterCommands(RegisterCommandsEvent event) {
+        RandomTeleportCommand.register(event.getDispatcher());
+    }
+
     public void loadConfig() {
         try {
             this.config = new ServerConfig();
@@ -59,7 +59,7 @@ public class ExtraRTP {
             this.locale = new LocaleConfig();
             this.locale.init();
         } catch (Exception e) {
-            LOGGER.error("[ExtraRTP] Error load config.", e);
+            LOGGER.error("Error load config.", e);
         }
     }
 

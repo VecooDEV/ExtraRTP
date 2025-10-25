@@ -17,6 +17,8 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.Util;
 import net.minecraft.world.server.ServerWorld;
 
+import javax.annotation.Nonnull;
+
 public class RandomTeleportCommand {
     public static void register(CommandDispatcher<CommandSource> dispatcher) {
         dispatcher.register(Commands.literal("rtp")
@@ -27,6 +29,7 @@ public class RandomTeleportCommand {
                         .suggests((s, builder) -> {
                             for (ServerWorld dimensions : ExtraRTP.getInstance().getServer().getAllLevels()) {
                                 String dimensionName = dimensions.dimension().location().getPath().toLowerCase();
+
                                 if (dimensionName.startsWith(builder.getRemaining().toLowerCase())) {
                                     builder.suggest(dimensionName);
                                 }
@@ -42,7 +45,7 @@ public class RandomTeleportCommand {
                         .executes(e -> executeReload(e.getSource()))));
     }
 
-    private static int executeRTP(ServerPlayerEntity player) {
+    private static int executeRTP(@Nonnull ServerPlayerEntity player) {
         ServerConfig config = ExtraRTP.getInstance().getConfig();
         LocaleConfig localeConfig = ExtraRTP.getInstance().getLocale();
         ServerWorld world = UtilWorld.getWorldByName(config.getDefaultWorld());
@@ -69,7 +72,7 @@ public class RandomTeleportCommand {
         return 1;
     }
 
-    private static int executeRTPDimension(ServerPlayerEntity player, String dimension) {
+    private static int executeRTPDimension(@Nonnull ServerPlayerEntity player, @Nonnull String dimension) {
         ServerWorld world = UtilWorld.getWorldByName(dimension);
         LocaleConfig localeConfig = ExtraRTP.getInstance().getLocale();
 
@@ -103,7 +106,7 @@ public class RandomTeleportCommand {
         return 1;
     }
 
-    private static int executeRTPDimensionPlayer(CommandSource source, String dimension, ServerPlayerEntity player) {
+    private static int executeRTPDimensionPlayer(@Nonnull CommandSource source, @Nonnull String dimension, @Nonnull ServerPlayerEntity player) {
         ServerWorld world = UtilWorld.getWorldByName(dimension);
         LocaleConfig localeConfig = ExtraRTP.getInstance().getLocale();
 
@@ -129,7 +132,7 @@ public class RandomTeleportCommand {
         return 1;
     }
 
-    private static int executeReload(CommandSource source) {
+    private static int executeReload(@Nonnull CommandSource source) {
         ExtraRTP.getInstance().loadConfig();
 
         source.sendSuccess(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getConfigReload()), false);

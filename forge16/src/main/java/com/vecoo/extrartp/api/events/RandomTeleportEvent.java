@@ -4,16 +4,15 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.eventbus.api.Event;
 
+import javax.annotation.Nonnull;
+
 public class RandomTeleportEvent extends Event {
     private final ServerPlayerEntity player;
     private ServerWorld world;
-    private double x;
-    private double y;
-    private double z;
-    private float yRot;
-    private float xRot;
+    private double x, y, z;
+    private float yRot, xRot;
 
-    public RandomTeleportEvent(ServerPlayerEntity player, ServerWorld world, double x, double y, double z, float yRot, float xRot) {
+    public RandomTeleportEvent(@Nonnull ServerPlayerEntity player, @Nonnull ServerWorld world, double x, double y, double z, float yRot, float xRot) {
         this.player = player;
         this.world = world;
         this.x = x;
@@ -23,10 +22,12 @@ public class RandomTeleportEvent extends Event {
         this.xRot = xRot;
     }
 
+    @Nonnull
     public ServerPlayerEntity getPlayer() {
         return this.player;
     }
 
+    @Nonnull
     public ServerWorld getWorld() {
         return this.world;
     }
@@ -51,7 +52,7 @@ public class RandomTeleportEvent extends Event {
         return this.xRot;
     }
 
-    public void setWorld(ServerWorld world) {
+    public void setWorld(@Nonnull ServerWorld world) {
         this.world = world;
     }
 
@@ -76,7 +77,7 @@ public class RandomTeleportEvent extends Event {
     }
 
     public static class Successful extends RandomTeleportEvent {
-        public Successful(ServerPlayerEntity player, ServerWorld world, double x, double y, double z, float yRot, float xRot) {
+        public Successful(@Nonnull ServerPlayerEntity player, @Nonnull ServerWorld world, double x, double y, double z, float yRot, float xRot) {
             super(player, world, x, y, z, yRot, xRot);
         }
     }

@@ -11,22 +11,22 @@ authors = "Vecoo"
 description = "Mod that adds a system of random teleportation across dimensions."
 
 [[dependencies.extrartp]]
-modId = "neoforge"
-type = "required"
-versionRange = "[21.1,)"
-ordering = "NONE"
-side = "BOTH"
-
-[[dependencies.extrartp]]
 modId = "minecraft"
 type = "required"
 versionRange = "[1.21,)"
 ordering = "NONE"
 side = "BOTH"
 
+[[dependencies.extrartp]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.1,)"
+ordering = "NONE"
+side = "BOTH"
+
 [[dependencies.ey]]
 modId = "extralib"
 type = "required"
-versionRange = "[1.7,)"
+versionRange = "[1.8,)"
 ordering = "NONE"
 side = "BOTH"

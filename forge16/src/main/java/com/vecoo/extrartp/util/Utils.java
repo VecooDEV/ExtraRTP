@@ -7,6 +7,7 @@ import com.vecoo.extrartp.config.ServerConfig;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.Util;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -15,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 public class Utils {
     public static Map<UUID, Long> COOLDOWN = new HashMap<>();
 
-    public static boolean hasRandomTeleportCooldown(ServerPlayerEntity player) {
+    public static boolean hasRandomTeleportCooldown(@Nonnull ServerPlayerEntity player) {
         if (UtilPermission.hasPermission(player, "minecraft.command.rtp.cooldown")) {
             return false;
         }
@@ -39,7 +40,7 @@ public class Utils {
         return false;
     }
 
-    public static int heightStart(String dimension) {
+    public static int heightStart(@Nonnull String dimension) {
         ServerConfig config = ExtraRTP.getInstance().getConfig();
 
         if (config.getHeightWorlds().containsKey(dimension)) {

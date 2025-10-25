@@ -1,1 +1,1 @@
-* Change load async load config to sync.
+* Update depends.
