@@ -1,6 +1,7 @@
 package com.vecoo.extrartp.config;
 
 import com.vecoo.extralib.gson.UtilGson;
+import com.vecoo.extrartp.ExtraRTP;
 
 public class LocaleConfig {
     private String configReload = "&e(!) Configs reloaded.";
@@ -58,6 +59,7 @@ public class LocaleConfig {
         }).join();
 
         if (!completed) {
+            ExtraRTP.getLogger().error("Error init locale config, generating new locale config.");
             write();
         }
     }

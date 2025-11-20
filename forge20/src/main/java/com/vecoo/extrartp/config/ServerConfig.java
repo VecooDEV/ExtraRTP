@@ -2,6 +2,7 @@ package com.vecoo.extrartp.config;
 
 import com.google.common.collect.Sets;
 import com.vecoo.extralib.gson.UtilGson;
+import com.vecoo.extrartp.ExtraRTP;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -17,9 +18,9 @@ public class ServerConfig {
 
     public ServerConfig() {
         this.heightWorlds = new HashMap<>();
-        this.heightWorlds.put("overworld", 256);
+        this.heightWorlds.put("overworld", 319);
         this.heightWorlds.put("the_nether", 120);
-        this.heightWorlds.put("the_end", 256);
+        this.heightWorlds.put("the_end", 319);
     }
 
     public String getDefaultWorld() {
@@ -68,6 +69,7 @@ public class ServerConfig {
         }).join();
 
         if (!completed) {
+            ExtraRTP.getLogger().error("Error init config, generating new config.");
             write();
         }
     }
