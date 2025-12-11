@@ -41,13 +41,13 @@ public class LocaleConfig {
         return this.successfulTeleportPlayer;
     }
 
-    private void write() {
-        UtilGson.writeFileAsync("/config/ExtraRTP/", "locale.json", UtilGson.newGson().toJson(this)).join();
+    private void save() {
+        UtilGson.writeFileAsync("/config/ExtraRTP/", "locale.json", UtilGson.getGson().toJson(this)).join();
     }
 
     public void init() {
         boolean completed = UtilGson.readFileAsync("/config/ExtraRTP/", "locale.json", el -> {
-            LocaleConfig config = UtilGson.newGson().fromJson(el, LocaleConfig.class);
+            LocaleConfig config = UtilGson.getGson().fromJson(el, LocaleConfig.class);
 
             this.configReload = config.getConfigReload();
             this.successfulTeleport = config.getSuccessfulTeleport();
@@ -60,7 +60,7 @@ public class LocaleConfig {
 
         if (!completed) {
             ExtraRTP.getLogger().error("Error init locale config, generating new locale config.");
-            write();
+            save();
         }
     }
 }

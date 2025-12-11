@@ -13,26 +13,26 @@ import net.minecraft.stats.Stats;
 
 public class RTPListener {
     public static void onPlayerJoin(ServerGamePacketListenerImpl serverGamePacketListener, PacketSender packetSender, MinecraftServer server) {
-        ServerPlayer player = serverGamePacketListener.player;
-
         if (!ExtraRTP.getInstance().getConfig().isFirstJoinRTP()) {
             return;
         }
 
-        if (player.getStats().getValue(Stats.CUSTOM.get(Stats.LEAVE_GAME)) == 0) {
-            ServerLevel world = UtilWorld.getLevelByName(ExtraRTP.getInstance().getConfig().getDefaultWorld());
+        ServerPlayer player = serverGamePacketListener.player;
 
-            if (world == null) {
-                player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getNotDimensionFound()
+        if (player.getStats().getValue(Stats.CUSTOM.get(Stats.LEAVE_GAME)) == 0) {
+            ServerLevel level = UtilWorld.findLevelByName(ExtraRTP.getInstance().getConfig().getDefaultWorld());
+
+            if (level == null) {
+                player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocaleConfig().getNotDimensionFound()
                         .replace("%dimension%", ExtraRTP.getInstance().getConfig().getDefaultWorld())));
                 return;
             }
 
-            if (ExtraRTPFactory.randomTeleport(world, player)) {
-                player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getSuccessfulTeleport()
+            if (ExtraRTPFactory.randomTeleport(player, level)) {
+                player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocaleConfig().getSuccessfulTeleport()
                         .replace("%dimension%", ExtraRTP.getInstance().getConfig().getDefaultWorld())));
             } else {
-                player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getFailedTeleport()));
+                player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocaleConfig().getFailedTeleport()));
             }
         }
     }

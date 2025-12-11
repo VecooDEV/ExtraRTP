@@ -51,13 +51,13 @@ public class ServerConfig {
         return this.blacklistWorldList;
     }
 
-    private void write() {
-        UtilGson.writeFileAsync("/config/ExtraRTP/", "config.json", UtilGson.newGson().toJson(this)).join();
+    private void save() {
+        UtilGson.writeFileAsync("/config/ExtraRTP/", "config.json", UtilGson.getGson().toJson(this)).join();
     }
 
     public void init() {
         boolean completed = UtilGson.readFileAsync("/config/ExtraRTP/", "config.json", el -> {
-            ServerConfig config = UtilGson.newGson().fromJson(el, ServerConfig.class);
+            ServerConfig config = UtilGson.getGson().fromJson(el, ServerConfig.class);
 
             this.defaultWorld = config.getDefaultWorld();
             this.countAttemptsTeleport = config.getCountAttemptsTeleport();
@@ -70,7 +70,7 @@ public class ServerConfig {
 
         if (!completed) {
             ExtraRTP.getLogger().error("Error init config, generating new config.");
-            write();
+            save();
         }
     }
 }

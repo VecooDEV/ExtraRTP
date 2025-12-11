@@ -1,18 +1,13 @@
-![](https://i.imgur.com/yeoPCvQ.png)   
-[![](https://i.imgur.com/B4evs2K.png)](https://discord.gg/VSGEVagRPq) [![](https://i.imgur.com/uquQMuU.png)](https://github.com/VecooDEV/ExtraRTP/wiki) [![](https://i.imgur.com/eaHjYUQ.png)](https://www.patreon.com/Vecoo) [![](https://i.imgur.com/yPBPV5c.png)](https://ko-fi.com/vecoo)
-
-![](https://i.imgur.com/uC23hGv.png)
+![](https://cdn.modrinth.com/data/cached_images/9b72e20ee668ddf22d0e78392358f6acf795abf3_0.webp)
+![](https://cdn.modrinth.com/data/cached_images/a88b4d9b30adc2443994018f490118a749203277.png)
 * Optimized random teleportation system.
 * Teleportation across all available dimensions.
 * Ability to teleport on first entry.
 * Random teleportation cooldown.
 * Full mod customization.
 
-![](https://i.imgur.com/AACXM1B.png)
+![](https://cdn.modrinth.com/data/cached_images/6228efde392016c943d2182746e0f0adbcef2e26.png)
 * We write a command and teleport to a random point in the world, there is also a teleportation cooldown so as not to overload the server.
 
-![](https://i.imgur.com/iCmv0br.png)   
-[<img height="150" src="https://i.imgur.com/suGlOwq.png" width="150"/>](https://www.curseforge.com/minecraft/mc-mods/extralib)
-
-![](https://i.imgur.com/lX7HG2b.png)   
-[![](https://i.imgur.com/x3JMFRv.png)](https://www.curseforge.com/minecraft/mc-mods/extrartp) [![](https://i.imgur.com/Q6tm4Fv.png)](https://modrinth.com/mod/extrartp)
+![](https://cdn.modrinth.com/data/cached_images/d886160fd773b7c72357c40403c818a2ac850f03.png)
+[<img height="150" src="https://cdn.modrinth.com/data/cached_images/7797661bf0defeb0d3eb387785d7f3e43ef341bc_0.webp" width="150"/>](https://modrinth.com/mod/extralib)

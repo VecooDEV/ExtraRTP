@@ -29,7 +29,7 @@ public class Utils {
         long timePassed = System.currentTimeMillis() - COOLDOWN.get(playerUUID);
 
         if (timePassed < cooldownMillis) {
-            player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getCooldownTeleport()
+            player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocaleConfig().getCooldownTeleport()
                     .replace("%cooldown%", String.valueOf(TimeUnit.MILLISECONDS.toSeconds(cooldownMillis - timePassed)))));
             return true;
         }

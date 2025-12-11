@@ -19,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ExtraRTPFactory {
-    public static boolean randomTeleport(@NotNull ServerLevel level, @NotNull ServerPlayer player) {
+    public static boolean randomTeleport(@NotNull ServerPlayer player, @NotNull ServerLevel level) {
         ServerConfig config = ExtraRTP.getInstance().getConfig();
         RandomSource random = level.getRandom();
         WorldBorder worldBorder = level.getWorldBorder();

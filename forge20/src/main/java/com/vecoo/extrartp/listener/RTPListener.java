@@ -17,18 +17,18 @@ public class RTPListener {
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         ServerPlayer player = (ServerPlayer) event.getEntity();
         ServerConfig config = ExtraRTP.getInstance().getConfig();
-        LocaleConfig localeConfig = ExtraRTP.getInstance().getLocale();
+        LocaleConfig localeConfig = ExtraRTP.getInstance().getLocaleConfig();
 
         if (!UsernameCache.containsUUID(player.getUUID()) && config.isFirstJoinRTP()) {
-            ServerLevel world = UtilWorld.getLevelByName(config.getDefaultWorld());
+            ServerLevel level = UtilWorld.findLevelByName(config.getDefaultWorld());
 
-            if (world == null) {
+            if (level == null) {
                 player.sendSystemMessage(UtilChat.formatMessage(localeConfig.getNotDimensionFound()
                         .replace("%dimension%", config.getDefaultWorld())));
                 return;
             }
 
-            if (ExtraRTPFactory.randomTeleport(world, player)) {
+            if (ExtraRTPFactory.randomTeleport(player, level)) {
                 player.sendSystemMessage(UtilChat.formatMessage(localeConfig.getSuccessfulTeleport()
                         .replace("%dimension%", config.getDefaultWorld())));
             } else {

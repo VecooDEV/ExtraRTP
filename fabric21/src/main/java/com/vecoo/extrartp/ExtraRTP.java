@@ -19,7 +19,7 @@ public class ExtraRTP implements ModInitializer {
     private static ExtraRTP instance;
 
     private ServerConfig config;
-    private LocaleConfig locale;
+    private LocaleConfig localeConfig;
 
     private MinecraftServer server;
 
@@ -38,8 +38,8 @@ public class ExtraRTP implements ModInitializer {
         try {
             this.config = new ServerConfig();
             this.config.init();
-            this.locale = new LocaleConfig();
-            this.locale.init();
+            this.localeConfig = new LocaleConfig();
+            this.localeConfig.init();
         } catch (Exception e) {
             LOGGER.error("Error load config.", e);
         }
@@ -57,8 +57,8 @@ public class ExtraRTP implements ModInitializer {
         return instance.config;
     }
 
-    public LocaleConfig getLocale() {
-        return instance.locale;
+    public LocaleConfig getLocaleConfig() {
+        return instance.localeConfig;
     }
 
     public MinecraftServer getServer() {
