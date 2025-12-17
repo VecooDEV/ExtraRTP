@@ -1,11 +1,13 @@
 package com.vecoo.extrartp;
 
 import com.mojang.logging.LogUtils;
+import com.vecoo.extralib.config.YamlConfigFactory;
 import com.vecoo.extrartp.command.RandomTeleportCommand;
 import com.vecoo.extrartp.config.LocaleConfig;
 import com.vecoo.extrartp.config.ServerConfig;
 import com.vecoo.extrartp.listener.RTPListener;
 import com.vecoo.extrartp.util.PermissionNodes;
+import lombok.Getter;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -15,14 +17,17 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.server.permission.events.PermissionGatherEvent;
 import org.slf4j.Logger;
 
+import java.nio.file.Path;
+
 @Mod(ExtraRTP.MOD_ID)
 public class ExtraRTP {
     public static final String MOD_ID = "extrartp";
     private static final Logger LOGGER = LogUtils.getLogger();
 
+    @Getter
     private static ExtraRTP instance;
 
-    private ServerConfig config;
+    private ServerConfig serverConfig;
     private LocaleConfig localeConfig;
 
     private MinecraftServer server;
@@ -52,26 +57,16 @@ public class ExtraRTP {
     }
 
     public void loadConfig() {
-        try {
-            this.config = new ServerConfig();
-            this.config.init();
-            this.localeConfig = new LocaleConfig();
-            this.localeConfig.init();
-        } catch (Exception e) {
-            LOGGER.error("Error load config.", e);
-        }
-    }
-
-    public static ExtraRTP getInstance() {
-        return instance;
+        this.serverConfig = YamlConfigFactory.load(ServerConfig.class, Path.of("config/ExtraRTP/config.yml"));
+        this.localeConfig = YamlConfigFactory.load(LocaleConfig.class, Path.of("config/ExtraRTP/locale.yml"));
     }
 
     public static Logger getLogger() {
         return LOGGER;
     }
 
-    public ServerConfig getConfig() {
-        return instance.config;
+    public ServerConfig getServerConfig() {
+        return instance.serverConfig;
     }
 
     public LocaleConfig getLocaleConfig() {

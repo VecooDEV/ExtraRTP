@@ -3,7 +3,7 @@ package com.vecoo.extrartp.util;
 import com.vecoo.extralib.chat.UtilChat;
 import com.vecoo.extralib.permission.UtilPermission;
 import com.vecoo.extrartp.ExtraRTP;
-import com.vecoo.extrartp.config.ServerConfig;
+import lombok.val;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -19,13 +19,13 @@ public class Utils {
             return false;
         }
 
-        UUID playerUUID = player.getUUID();
+        val playerUUID = player.getUUID();
 
         if (!COOLDOWN.containsKey(playerUUID)) {
             return false;
         }
 
-        long cooldownMillis = TimeUnit.SECONDS.toMillis(ExtraRTP.getInstance().getConfig().getCooldownSecondTeleport());
+        val cooldownMillis = TimeUnit.SECONDS.toMillis(ExtraRTP.getInstance().getServerConfig().getCooldownSecondTeleport());
         long timePassed = System.currentTimeMillis() - COOLDOWN.get(playerUUID);
 
         if (timePassed < cooldownMillis) {
@@ -39,12 +39,12 @@ public class Utils {
     }
 
     public static int heightStart(@NotNull String dimension) {
-        ServerConfig config = ExtraRTP.getInstance().getConfig();
+        val serverConfig = ExtraRTP.getInstance().getServerConfig();
 
-        if (config.getHeightWorlds().containsKey(dimension)) {
-            return config.getHeightWorlds().get(dimension);
+        if (serverConfig.getHeightWorlds().containsKey(dimension)) {
+            return serverConfig.getHeightWorlds().get(dimension);
         }
 
-        return 256;
+        return 319;
     }
 }
