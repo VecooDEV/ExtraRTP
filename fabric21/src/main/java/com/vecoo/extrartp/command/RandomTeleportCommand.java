@@ -22,11 +22,12 @@ public class RandomTeleportCommand {
         dispatcher.register(Commands.literal("rtp")
                 .requires(p -> ExtraRTP.getInstance().getServerConfig().isLowPermission() || UtilPermission.hasPermission(p, "minecraft.command.rtp"))
                 .executes(e -> executeRTP(e.getSource().getPlayerOrException()))
+
                 .then(Commands.argument("dimension", StringArgumentType.string())
                         .requires(p -> UtilPermission.hasPermission(p, "minecraft.command.rtp.dimension"))
                         .suggests((s, builder) -> {
                             for (ServerLevel dimensions : ExtraRTP.getInstance().getServer().getAllLevels()) {
-                                String dimensionName = dimensions.dimension().location().getPath().toLowerCase();
+                                val dimensionName = dimensions.dimension().location().getPath().toLowerCase();
 
                                 if (dimensionName.startsWith(builder.getRemaining().toLowerCase())) {
                                     builder.suggest(dimensionName);
