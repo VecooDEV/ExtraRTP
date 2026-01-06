@@ -65,7 +65,7 @@ public class RandomTeleportCommand {
         if (ExtraRTPService.randomTeleport(player, level)) {
             Utils.COOLDOWN.put(player.getUUID(), System.currentTimeMillis());
 
-            player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocaleConfig().getSuccessfulTeleport()
+            player.sendSystemMessage(UtilChat.formatMessage(localeConfig.getSuccessfulTeleport()
                     .replace("%dimension%", ExtraRTP.getInstance().getServerConfig().getDefaultWorld())));
         } else {
             player.sendSystemMessage(UtilChat.formatMessage(localeConfig.getFailedTeleport()));
@@ -99,7 +99,7 @@ public class RandomTeleportCommand {
         if (ExtraRTPService.randomTeleport(player, level)) {
             Utils.COOLDOWN.put(player.getUUID(), System.currentTimeMillis());
 
-            player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocaleConfig().getSuccessfulTeleport()
+            player.sendSystemMessage(UtilChat.formatMessage(localeConfig.getSuccessfulTeleport()
                     .replace("%dimension%", dimension)));
         } else {
             player.sendSystemMessage(UtilChat.formatMessage(localeConfig.getFailedTeleport()));
@@ -121,7 +121,7 @@ public class RandomTeleportCommand {
         if (ExtraRTPService.randomTeleport(player, level)) {
             Utils.COOLDOWN.put(player.getUUID(), System.currentTimeMillis());
 
-            player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocaleConfig().getSuccessfulTeleport()
+            player.sendSystemMessage(UtilChat.formatMessage(localeConfig.getSuccessfulTeleport()
                     .replace("%dimension%", dimension)));
             source.sendSystemMessage(UtilChat.formatMessage(localeConfig.getSuccessfulTeleportPlayer()
                     .replace("%dimension%", dimension)
