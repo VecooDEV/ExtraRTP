@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class PermissionNodes {
-    public static final Set<PermissionNode<?>> PERMISSION_LIST = new HashSet<>();
+    private static final Set<PermissionNode<?>> PERMISSION_LIST = new HashSet<>();
 
     public static PermissionNode<Boolean> RANDOMTELEPORT_COMMAND = UtilPermission.getPermissionNode("minecraft.command.rtp");
     public static PermissionNode<Boolean> RANDOMTELEPORT_COOLDOWN = UtilPermission.getPermissionNode("minecraft.command.rtp.cooldown");

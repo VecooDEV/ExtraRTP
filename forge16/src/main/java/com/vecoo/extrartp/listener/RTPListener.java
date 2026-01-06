@@ -3,12 +3,10 @@ package com.vecoo.extrartp.listener;
 import com.vecoo.extralib.chat.UtilChat;
 import com.vecoo.extralib.world.UtilWorld;
 import com.vecoo.extrartp.ExtraRTP;
-import com.vecoo.extrartp.api.factory.ExtraRTPFactory;
-import com.vecoo.extrartp.config.LocaleConfig;
-import com.vecoo.extrartp.config.ServerConfig;
+import com.vecoo.extrartp.api.service.ExtraRTPService;
+import lombok.val;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.Util;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -16,22 +14,22 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class RTPListener {
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        ServerPlayerEntity player = (ServerPlayerEntity) event.getPlayer();
-        ServerConfig config = ExtraRTP.getInstance().getConfig();
-        LocaleConfig localeConfig = ExtraRTP.getInstance().getLocale();
+        val serverConfig = ExtraRTP.getInstance().getServerConfig();
+        val localeConfig = ExtraRTP.getInstance().getLocaleConfig();
+        val player = (ServerPlayerEntity) event.getPlayer();
 
-        if (!UsernameCache.containsUUID(player.getUUID()) && config.isFirstJoinRTP()) {
-            ServerWorld world = UtilWorld.getWorldByName(config.getDefaultWorld());
+        if (!UsernameCache.containsUUID(player.getUUID()) && serverConfig.isFirstJoinRTP()) {
+            val world = UtilWorld.findWorldByName(serverConfig.getDefaultWorld());
 
             if (world == null) {
                 player.sendMessage(UtilChat.formatMessage(localeConfig.getNotDimensionFound()
-                        .replace("%dimension%", config.getDefaultWorld())), Util.NIL_UUID);
+                        .replace("%dimension%", serverConfig.getDefaultWorld())), Util.NIL_UUID);
                 return;
             }
 
-            if (ExtraRTPFactory.randomTeleport(world, player)) {
+            if (ExtraRTPService.randomTeleport(player, world)) {
                 player.sendMessage(UtilChat.formatMessage(localeConfig.getSuccessfulTeleport()
-                        .replace("%dimension%", config.getDefaultWorld())), Util.NIL_UUID);
+                        .replace("%dimension%", serverConfig.getDefaultWorld())), Util.NIL_UUID);
             } else {
                 player.sendMessage(UtilChat.formatMessage(localeConfig.getFailedTeleport()), Util.NIL_UUID);
             }

@@ -3,7 +3,7 @@ package com.vecoo.extrartp.util;
 import com.vecoo.extralib.chat.UtilChat;
 import com.vecoo.extralib.permission.UtilPermission;
 import com.vecoo.extrartp.ExtraRTP;
-import com.vecoo.extrartp.config.ServerConfig;
+import lombok.val;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,24 +12,24 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class Utils {
-    public static HashMap<UUID, Long> COOLDOWN = new HashMap<>();
+    public static final HashMap<UUID, Long> COOLDOWN = new HashMap<>();
 
     public static boolean hasRandomTeleportCooldown(@NotNull ServerPlayer player) {
         if (UtilPermission.hasPermission(player, "minecraft.command.rtp.cooldown")) {
             return false;
         }
 
-        UUID playerUUID = player.getUUID();
+        val playerUUID = player.getUUID();
 
         if (!COOLDOWN.containsKey(playerUUID)) {
             return false;
         }
 
-        long cooldownMillis = TimeUnit.SECONDS.toMillis(ExtraRTP.getInstance().getConfig().getCooldownSecondTeleport());
+        val cooldownMillis = TimeUnit.SECONDS.toMillis(ExtraRTP.getInstance().getServerConfig().getCooldownSecondTeleport());
         long timePassed = System.currentTimeMillis() - COOLDOWN.get(playerUUID);
 
         if (timePassed < cooldownMillis) {
-            player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocale().getCooldownTeleport()
+            player.sendSystemMessage(UtilChat.formatMessage(ExtraRTP.getInstance().getLocaleConfig().getCooldownTeleport()
                     .replace("%cooldown%", String.valueOf(TimeUnit.MILLISECONDS.toSeconds(cooldownMillis - timePassed)))));
             return true;
         }
@@ -39,12 +39,12 @@ public class Utils {
     }
 
     public static int heightStart(@NotNull String dimension) {
-        ServerConfig config = ExtraRTP.getInstance().getConfig();
+        val serverConfig = ExtraRTP.getInstance().getServerConfig();
 
-        if (config.getHeightWorlds().containsKey(dimension)) {
-            return config.getHeightWorlds().get(dimension);
+        if (serverConfig.getHeightWorlds().containsKey(dimension)) {
+            return serverConfig.getHeightWorlds().get(dimension);
         }
 
-        return 256;
+        return 319;
     }
 }

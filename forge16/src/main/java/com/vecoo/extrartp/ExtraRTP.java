@@ -1,9 +1,11 @@
 package com.vecoo.extrartp;
 
+import com.vecoo.extralib.config.YamlConfigFactory;
 import com.vecoo.extrartp.command.RandomTeleportCommand;
 import com.vecoo.extrartp.config.LocaleConfig;
 import com.vecoo.extrartp.config.ServerConfig;
 import com.vecoo.extrartp.listener.RTPListener;
+import lombok.Getter;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -20,10 +22,11 @@ public class ExtraRTP {
     public static final String MOD_ID = "extrartp";
     private static final Logger LOGGER = LogManager.getLogger();
 
+    @Getter
     private static ExtraRTP instance;
 
-    private ServerConfig config;
-    private LocaleConfig locale;
+    private ServerConfig serverConfig;
+    private LocaleConfig localeConfig;
 
     private MinecraftServer server;
 
@@ -37,6 +40,11 @@ public class ExtraRTP {
     }
 
     @SubscribeEvent
+    public void onRegisterCommands(RegisterCommandsEvent event) {
+        RandomTeleportCommand.register(event.getDispatcher());
+    }
+
+    @SubscribeEvent
     public void onServerStarting(FMLServerStartingEvent event) {
         this.server = event.getServer();
 
@@ -47,36 +55,21 @@ public class ExtraRTP {
         PermissionAPI.registerNode("minecraft.command.rtp.reload", DefaultPermissionLevel.OP, "");
     }
 
-    @SubscribeEvent
-    public void onRegisterCommands(RegisterCommandsEvent event) {
-        RandomTeleportCommand.register(event.getDispatcher());
-    }
-
     public void loadConfig() {
-        try {
-            this.config = new ServerConfig();
-            this.config.init();
-            this.locale = new LocaleConfig();
-            this.locale.init();
-        } catch (Exception e) {
-            LOGGER.error("Error load config.", e);
-        }
-    }
-
-    public static ExtraRTP getInstance() {
-        return instance;
+        this.serverConfig = YamlConfigFactory.load(ServerConfig.class, "config/ExtraRTP/config.yml");
+        this.localeConfig = YamlConfigFactory.load(LocaleConfig.class, "config/ExtraRTP/locale.yml");
     }
 
     public static Logger getLogger() {
         return LOGGER;
     }
 
-    public ServerConfig getConfig() {
-        return instance.config;
+    public ServerConfig getServerConfig() {
+        return instance.serverConfig;
     }
 
-    public LocaleConfig getLocale() {
-        return instance.locale;
+    public LocaleConfig getLocaleConfig() {
+        return instance.localeConfig;
     }
 
     public MinecraftServer getServer() {
