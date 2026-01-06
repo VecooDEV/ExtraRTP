@@ -17,8 +17,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.server.permission.events.PermissionGatherEvent;
 import org.slf4j.Logger;
 
-import java.nio.file.Path;
-
 @Mod(ExtraRTP.MOD_ID)
 public class ExtraRTP {
     public static final String MOD_ID = "extrartp";
@@ -57,8 +55,8 @@ public class ExtraRTP {
     }
 
     public void loadConfig() {
-        this.serverConfig = YamlConfigFactory.load(ServerConfig.class, Path.of("config/ExtraRTP/config.yml"));
-        this.localeConfig = YamlConfigFactory.load(LocaleConfig.class, Path.of("config/ExtraRTP/locale.yml"));
+        this.serverConfig = YamlConfigFactory.load(ServerConfig.class, "config/ExtraRTP/config.yml");
+        this.localeConfig = YamlConfigFactory.load(LocaleConfig.class, "config/ExtraRTP/locale.yml");
     }
 
     public static Logger getLogger() {

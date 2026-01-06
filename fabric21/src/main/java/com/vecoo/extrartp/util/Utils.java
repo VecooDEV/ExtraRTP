@@ -12,7 +12,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class Utils {
-    public static HashMap<UUID, Long> COOLDOWN = new HashMap<>();
+    public static final HashMap<UUID, Long> COOLDOWN = new HashMap<>();
 
     public static boolean hasRandomTeleportCooldown(@NotNull ServerPlayer player) {
         if (UtilPermission.hasPermission(player, "minecraft.command.rtp.cooldown")) {

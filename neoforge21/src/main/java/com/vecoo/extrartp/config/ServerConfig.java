@@ -16,10 +16,9 @@ public class ServerConfig {
     private boolean firstJoinRTP = false;
     private boolean blacklistWorld = false;
     private Set<String> blacklistWorldList = Sets.newHashSet("the_nether", "the_end");
-    private HashMap<String, Integer> heightWorlds;
+    private HashMap<String, Integer> heightWorlds = new HashMap<>();
 
     public ServerConfig() {
-        this.heightWorlds = new HashMap<>();
         this.heightWorlds.put("overworld", 319);
         this.heightWorlds.put("the_nether", 120);
         this.heightWorlds.put("the_end", 319);

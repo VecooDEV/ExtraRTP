@@ -13,22 +13,22 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class RTPListener {
     @SubscribeEvent
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        val serverConfig = ExtraRTP.getInstance().getServerConfig();
         val localeConfig = ExtraRTP.getInstance().getLocaleConfig();
         val player = (ServerPlayer) event.getEntity();
-        val config = ExtraRTP.getInstance().getServerConfig();
 
-        if (!UsernameCache.containsUUID(player.getUUID()) && config.isFirstJoinRTP()) {
-            val level = UtilWorld.findLevelByName(config.getDefaultWorld());
+        if (!UsernameCache.containsUUID(player.getUUID()) && serverConfig.isFirstJoinRTP()) {
+            val level = UtilWorld.findLevelByName(serverConfig.getDefaultWorld());
 
             if (level == null) {
                 player.sendSystemMessage(UtilChat.formatMessage(localeConfig.getNotDimensionFound()
-                        .replace("%dimension%", config.getDefaultWorld())));
+                        .replace("%dimension%", serverConfig.getDefaultWorld())));
                 return;
             }
 
             if (ExtraRTPService.randomTeleport(player, level)) {
                 player.sendSystemMessage(UtilChat.formatMessage(localeConfig.getSuccessfulTeleport()
-                        .replace("%dimension%", config.getDefaultWorld())));
+                        .replace("%dimension%", serverConfig.getDefaultWorld())));
             } else {
                 player.sendSystemMessage(UtilChat.formatMessage(localeConfig.getFailedTeleport()));
             }
